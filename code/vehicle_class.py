@@ -15,7 +15,7 @@ class Vehicle:
             self.distance_to_lead = lead_vehicle.position - self.position
             af = alpha * lead_vehicle.acceleration + beta * (self.velocity - lead_vehicle.velocity) + gamma * (self.distance_to_lead - desired_distance)
         else:
-            af = 5
+            af = 0
 
         self.acceleration = af
         self.position +=  (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))

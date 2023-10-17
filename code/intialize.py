@@ -16,11 +16,13 @@ cars_ramp_no = 5
 initial_main_velocity = 25 #m/s
 initial_main_desired_dist = 3 #m
 initial_main_accelration = 3 #m/s^2
-delta_time = 0.5 #seconds
-desired_distance_bet_cars = 3 #m
-alpha = 0.00001
-beta = 0.00002
-gamma = 0.0001
+
+#parameters to update kinematics
+delta_time = 0.01 #seconds
+desired_distance_bet_cars = 6 #m
+alpha = 0.000001
+beta = 0.000002
+gamma = 0.000001
 
 
 #cars on main line list
@@ -48,14 +50,9 @@ for i in range(cars_main_line_no):
     car_label = ax.text(car.position, 1, car.name, ha='center', va='center')  # Add a label for the car
     car_labels.append(car_label)
 
+#print created cars
 for c in main_cars_platoon.values():
     print(c)
-
-
-
-
-
-
 
 
 #animation
@@ -69,7 +66,7 @@ plt.pause(0.5)  # Initial pause for visualization
 
 
 # Simulation loop to update car positions
-for _ in range(100):  # Simulate 100 time steps
+for _ in range(1000):  # Simulate 100 time steps
     # Update car positions (e.g., simple simulation with constant velocity)
     for i,label in zip(range(len(main_cars_platoon)),car_labels):
         car = list(main_cars_platoon.values())[i]    

@@ -1,2 +1,2 @@
-go to main.py and run
+go to intialize.py and run
 enjoy :) 
