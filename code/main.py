@@ -4,7 +4,7 @@ import intialize
 alpha = 0.2
 beta = 0.5
 gamma = 0.6
-distance_to_merging = 10
+distance_to_merging = 20
 
 
 #get cars info
@@ -22,4 +22,4 @@ for i in current_sequence:
         sequence_full_info[i] = ramp_cars[i]
 
 
-
+intialize.platooning(sequence_full_info)
