@@ -1,5 +1,4 @@
 import random
-import update_pos
 
 #constraints
 min_v = 60 * (5/18) #m/s
@@ -60,8 +59,6 @@ print("After doing iteration")
 
 # this is only a test of one iteration where we feed a certain decsision 
 list_initial = ['A','a','b','B','C','c','D','E','F','d','G','H','I','J']
-
-update_pos.update_position(list_main_cars,list_ramp_cars,list_initial,5)
 
 #Move a point on a grid after giving it an intial accelration and velocity
 # agrid is a matrix so we can represent it in 
