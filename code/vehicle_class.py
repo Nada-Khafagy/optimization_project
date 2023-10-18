@@ -7,9 +7,10 @@ class Vehicle:
         self.velocity = initial_velocity
         self.acceleration = initial_acceleration
         self.distance_to_lead = 0 #difference in position between this vehicle and its leading vehicle
+        self.traveled_time = 0
 
 
-    def update_kinematics(self, lead_vehicle, delta_time, desired_distance, alpha, beta, gamma):
+    def update_cruise_control(self, lead_vehicle, delta_time, merging_position,desired_distance, alpha, beta, gamma):
        
         if lead_vehicle is not None:
             self.distance_to_lead = lead_vehicle.position - self.position
@@ -20,8 +21,12 @@ class Vehicle:
         self.acceleration = af
         self.position +=  (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
         self.velocity += self.acceleration*delta_time
+        if self.position <= merging_position: 
+            self.traveled_time += delta_time
 
-
-
+    def update_kinematics(self, delta_time):
+        self.position +=  (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
+        self.velocity += self.acceleration*delta_time
+    
     def __str__(self):
-        return f"Vehicle: Name = {self.name}, Position = {self.position}, Velocity={self.velocity}, Accelration = {self.acceleration}, Distance to Lead={self.distance_to_lead}"
+        return f"Vehicle: Name = {self.name}, Position = {self.position}, Velocity={self.velocity}, Accelration = {self.acceleration}, Distance to Lead={self.distance_to_lead}, traveled time = {self.traveled_time}"
