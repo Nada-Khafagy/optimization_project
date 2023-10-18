@@ -4,8 +4,7 @@ optimization of the merging of vehicles on ramps
 - go to optimization_project\code
 - run main.py
 
-we have implemented platooning and you can see the map of the car in the initlization file
-but the evaluation of the objective function is yet to be done and it is in the main.py file
+we have implemented platooning and substituted in the objective function
 enjoy looking at the vehicles of the main line on the map :) 
 
 ## Team members
