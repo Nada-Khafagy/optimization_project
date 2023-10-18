@@ -24,7 +24,7 @@ for i in current_sequence:
 
 intialize.platooning(sequence_full_info)
 
-w1 = 0.2
-r = 5
-rl = 1
+w1 = 0.2 #weight on maxmizing number pf cars joined , other weight is on minimizing time and is calculated w2=(1-w1)
+r = 5 #total number of cars on ramp
+rl = 2 #number of cars on ramp left (didn't merge)
 print(objective_func.objective_func(w1, r, rl, sequence_full_info, min_v,max_v))
