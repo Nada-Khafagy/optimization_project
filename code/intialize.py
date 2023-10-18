@@ -21,7 +21,7 @@ initial_ramp_accelration = 0 #m/s^2
 
 #parameters to update kinematics
 distance_to_merging = 20
-delta_time = 0.01 #seconds
+delta_time = 0.01 #seconds, sampling time
 desired_distance_bet_cars = 6 #m
 alpha = 0.000001
 beta = 0.000002
@@ -112,11 +112,9 @@ def platooning():
             car.update_kinematics(lead_car,delta_time,desired_distance_bet_cars,alpha,beta,gamma) #update kinematics of the car each iteration
 
             if car.position <= distance_to_merging:
-                sum += car.position
-                num += 1
+                car.traveled_time += delta_time
             else:
-                print()
-                car_avg_velocities.append(sum/num)
+                print(car.traveled_time)
             
             #for debugging 
             #if car.name == 'B':
