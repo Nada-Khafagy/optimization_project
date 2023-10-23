@@ -1,5 +1,5 @@
 import random
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 import vehicle_class
 import scatter_custom
 #constraints
@@ -8,7 +8,7 @@ max_v = 120 * (5/18) #m/s
 min_a = -6 #m/s^2
 max_a = 5 #m/s^2
 min_a_ramp = -3 #m/s^2
-max_a_ramp = 3 #m/s^2
+max_a_ramp = 3.5 #m/s^2
 
 # intlizing parameters
 cars_main_line_no = 10
