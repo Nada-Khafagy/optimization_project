@@ -25,8 +25,8 @@ for i in current_sequence:
         sequence_full_info[i] = ramp_cars[i]
  
 
-test['A']=main_cars['A']
-test['B']=main_cars['B']
+test['A'] = main_cars['A']
+test['B'] = main_cars['B']
 
 intialize.platooning(main_cars,ramp_cars,sequence_full_info)
 #platoon.platooning(main_cars)
