@@ -21,7 +21,7 @@ initial_ramp_accelration = 0 #m/s^2
 initial_pos_upper=8
 initial_pos_lower=5
 #parameters to update kinematics
-decision_position = 5#m, position where we apply cruse control
+decision_position = 90 #m, position where we apply cruse control
 merging_position = 20 #m, position of point of merging
 delta_time = 0.01 #seconds, sampling time
 desired_distance_bet_cars = 6#m
@@ -113,7 +113,7 @@ def platooning(main_road,on_ramp,updated_sequence):
 
     # Simulation loop to update car positions
     for j in range(10000):  # Simulate 1000 time steps
-        if j<500:
+        if list(main_road.values())[0].position<decision_position:
             # Update car positions
             for i,label in zip(range(len(main_road)),car_labels):
                 car = list(main_road.values())[i] #current car
