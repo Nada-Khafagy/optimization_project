@@ -14,12 +14,12 @@ class Vehicle:
        
         if lead_vehicle is not None:
             self.distance_to_lead = lead_vehicle.position - self.position
-            af = alpha * lead_vehicle.acceleration + beta * (self.velocity - lead_vehicle.velocity) + gamma * (self.distance_to_lead - desired_distance)
+            af = alpha * lead_vehicle.acceleration + beta * ( lead_vehicle.velocity-self.velocity) + gamma * (self.distance_to_lead - desired_distance)
         else:
             af = 0
 
         self.acceleration = af
-        self.position +=  (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
+        self.position += (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
         self.velocity += self.acceleration*delta_time
         if self.position <= merging_position: 
             self.traveled_time += delta_time

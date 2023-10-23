@@ -1,6 +1,7 @@
 import intialize
 import objective_func
 import platoon
+#import Whole_Systme
 #global variables
 alpha = 10
 beta = 20
@@ -27,8 +28,8 @@ for i in current_sequence:
 test['A']=main_cars['A']
 test['B']=main_cars['B']
 
-#intialize.platooning(main_cars,ramp_cars,sequence_full_info)
-platoon.platooning(main_cars)
+intialize.platooning(main_cars,ramp_cars,sequence_full_info)
+#platoon.platooning(main_cars)
 w1 = 0.2
 r = 5
 rl = 1

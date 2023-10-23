@@ -1,5 +1,5 @@
 import random
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import vehicle_class
 import scatter_custom
 #constraints
@@ -8,7 +8,7 @@ max_v = 120 * (5/18) #m/s
 min_a = -6 #m/s^2
 max_a = 5 #m/s^2
 min_a_ramp = -3 #m/s^2
-max_a_ramp = 3.5 #m/s^2
+max_a_ramp = 3 #m/s^2
 
 # intlizing parameters
 cars_main_line_no = 10
@@ -101,7 +101,7 @@ def platooning(main_road,on_ramp,updated_sequence):
             car_labels_updates.append(car_labels_ramps[car_index])
     car_markers = ax.scatter([car.position for car in main_road.values()], [30] * len(main_road), marker=scatter_custom.custom_marker(4,2,-0), 
                              label=[car.name for car in main_road.values()], s=400)
-    car_markers_ramp = ax.scatter([car.position for car in on_ramp.values()], [5] * len(on_ramp),marker=scatter_custom.custom_marker(4,2,0),
+    car_markers_ramp = ax.scatter([car.position for car in on_ramp.values()], [5] * len(on_ramp),marker=scatter_custom.custom_marker(4,2,20),
                                    label=[car.name for car in on_ramp.values()], s=400)
    
     #ax.set_yticks([])  # Remove y-axis ticks
