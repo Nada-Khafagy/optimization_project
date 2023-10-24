@@ -84,8 +84,6 @@ def initalize_cars():
 
 
 
-<<<<<<< HEAD
-=======
     plt.title('Car Positions on the Highway')
     plt.pause(0.5)  # Initial pause for visualizaton
 
@@ -151,4 +149,3 @@ def initalize_cars():
         plt.pause(0.001)  # Pause for visualization
 
     
->>>>>>> 6fa424ec66a8ab22c6c83768a0eae8a70d2059b1
