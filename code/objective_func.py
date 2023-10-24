@@ -1,10 +1,10 @@
-def objective_func(w1, r, rl, sequence_car_info, min_v,max_v):
+def objective_func(w1, r, rl, car_sequence_info, min_v ,max_v):
     f1 = (r-rl)/r
     sum1 = 0
     sum2 = 0
     sum3 = 0
     sum4 = 0
-    for car in sequence_car_info.values():
+    for car in car_sequence_info.values():
         sum1 = sum1 + car.traveled_time
         sum2 = sum2 + (car.position/min_v)
         sum3 = sum3 + (car.position/max_v)
