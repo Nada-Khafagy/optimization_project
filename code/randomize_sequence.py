@@ -22,7 +22,7 @@ def randomize():
             r+=1
     print(sequence_car_info)
     print(current_sequence)
-    return current_sequence
+    return current_sequence,r,m
 
 
 

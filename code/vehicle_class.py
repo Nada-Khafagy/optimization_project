@@ -6,11 +6,12 @@ class Vehicle:
         self.position = initial_position
         self.velocity = initial_velocity
         self.acceleration = initial_acceleration
-        self.distance_to_lead = 0 #difference in position between this vehicle and its leading vehicle
+        self.distance_to_lead = 0
+        self.distance_to_merge = 0  #difference in position between this vehicle and its leading vehicle
         self.traveled_time = 0
 
 
-    def update_cruise_control(self, lead_vehicle, delta_time, merging_position,desired_distance, alpha, beta, gamma):
+    def update_cruise_control(self, lead_vehicle, delta_time, merging_position,desired_distance, alpha, beta, gamma,decision_flag):
        
         if lead_vehicle is not None:
             self.distance_to_lead = lead_vehicle.position - self.position
@@ -21,8 +22,9 @@ class Vehicle:
         self.acceleration = af
         self.position += (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
         self.velocity += self.acceleration*delta_time
-        if self.position <= merging_position: 
+        if (self.position <= merging_position)and (decision_flag==True): 
             self.traveled_time += delta_time
+            self.distance_to_merge=merging_position-self.position
 
     def update_kinematics(self, delta_time):
         self.position +=  (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
