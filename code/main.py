@@ -28,16 +28,9 @@ for i in current_sequence:
 
 test['A'] = main_cars['A']
 test['B'] = main_cars['B']
-<<<<<<< HEAD
 
 intialize.platooning(main_cars,ramp_cars,sequence_full_info)
 #platoon.platooning(main_cars)
-
-=======
-
-intialize.platooning(main_cars,ramp_cars,sequence_full_info)
-#platoon.platooning(main_cars)
->>>>>>> 6fa424ec66a8ab22c6c83768a0eae8a70d2059b1
 w1 = 0.2
 r = 5
 rl = 1
