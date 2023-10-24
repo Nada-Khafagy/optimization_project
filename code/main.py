@@ -1,6 +1,7 @@
 import intialize
 import objective_func
-import platoon
+import SA
+
 #import Whole_Systme
 #global variables
 alpha = 10
@@ -30,8 +31,10 @@ test['B'] = main_cars['B']
 
 intialize.platooning(main_cars,ramp_cars,sequence_full_info)
 #platoon.platooning(main_cars)
+
 w1 = 0.2
 r = 5
 rl = 1
-print(sequence_full_info)
+SA.simulated_annealing()
+#print(sequence_full_info)
 #print(objective_func.objective_func(w1, r, rl, sequence_full_info, min_v,max_v))
