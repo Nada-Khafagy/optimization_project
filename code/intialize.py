@@ -84,3 +84,71 @@ def initalize_cars():
 
 
 
+<<<<<<< HEAD
+=======
+    plt.title('Car Positions on the Highway')
+    plt.pause(0.5)  # Initial pause for visualizaton
+
+    # Simulation loop to update car positions
+    for j in range(10000):  # Simulate 1000 time steps
+        if list(main_road.values())[0].position<decision_position:
+            # Update car positions
+            for i,label in zip(range(len(main_road)),car_labels):
+                car = list(main_road.values())[i] #current car
+                
+                #first car has no lead and so we treat it differently
+                if i == 0:
+                    car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                    label.set_x(car.position)
+                    continue
+                
+                #check if it is in the zone we do cruse control in
+             
+                #get its leading car since it has a leader
+                lead_car = list(main_road.values())[i-1]
+                #start platooning   
+                car.update_cruise_control(lead_car,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                label.set_x(car.position)
+               
+                '''  print(  "{:.2f}".format(main_road['B'].distance_to_lead),"{:.2f}".format(main_road['C'].distance_to_lead),
+                    "{:.2f}".format(main_road['D'].distance_to_lead),"{:.2f}".format(main_road['E'].distance_to_lead),
+                    "{:.2f}".format(main_road['F'].distance_to_lead),"{:.2f}".format(main_road['G'].distance_to_lead),
+                    "{:.2f}".format(main_road['H'].distance_to_lead),"{:.2f}".format(main_road['I'].distance_to_lead,))'''
+                print(i)
+            for r,label_ramp in zip(range(len(on_ramp)),car_labels_ramps):
+                car_ramp = list(on_ramp.values())[r]
+                car_ramp.update_kinematics(delta_time)
+                label_ramp.set_x(car_ramp.position)
+
+            car_markers.set_offsets([(car.position, 30) for car in main_road.values()])
+            car_markers_ramp.set_offsets([(car.position, 5) for car in on_ramp.values()])
+            
+            
+        else:
+            for i in range(len(updated_sequence)):
+                car = list(updated_sequence.values())[i] #current car
+                if i == 0:
+                    car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                    car_labels_updates[i].set_x(car.position)
+                    continue
+                
+               
+                #get its leading car since it has a leader
+                lead_car = list(updated_sequence.values())[i-1]
+                #start platooning   
+                car.update_cruise_control(lead_car,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                car_labels_updates[i].set_x(car.position)
+
+            for r,label_ramp in zip(range(len(on_ramp)),car_labels_ramps):
+                car_ramp = list(on_ramp.values())[r]
+                if (car_ramp not in updated_sequence.values()):
+                    car_ramp.update_kinematics(delta_time)
+                    label_ramp.set_x(car_ramp.position)
+        
+        # Update the scatter plot
+            car_markers.set_offsets([(car.position,30) for car in main_road.values()]) 
+            car_markers_ramp.set_offsets([(car.position, 5) for car in on_ramp.values()])
+        plt.pause(0.001)  # Pause for visualization
+
+    
+>>>>>>> 6fa424ec66a8ab22c6c83768a0eae8a70d2059b1
