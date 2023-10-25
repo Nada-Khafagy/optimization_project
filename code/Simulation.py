@@ -71,7 +71,7 @@ def platooning(main_road,on_ramp,updated_sequence):
                 
                 #first car has no lead and so we treat it differently
                 if i == 0:
-                    car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                    car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma,True) 
                     label.set_x(car.position)
                     continue
                 
@@ -80,7 +80,7 @@ def platooning(main_road,on_ramp,updated_sequence):
                 #get its leading car since it has a leader
                 lead_car = list(main_road.values())[i-1]
                 #start platooning   
-                car.update_cruise_control(lead_car,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                car.update_cruise_control(lead_car,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma,True) 
                 label.set_x(car.position)
                
                 '''  print(  "{:.2f}".format(main_road['B'].distance_to_lead),"{:.2f}".format(main_road['C'].distance_to_lead),
@@ -101,7 +101,7 @@ def platooning(main_road,on_ramp,updated_sequence):
             for i in range(len(updated_sequence)):
                 car = list(updated_sequence.values())[i] #current car
                 if i == 0:
-                    car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                    car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma,True) 
                     car_labels_updates[i].set_x(car.position)
                     continue
                 
@@ -109,7 +109,7 @@ def platooning(main_road,on_ramp,updated_sequence):
                 #get its leading car since it has a leader
                 lead_car = list(updated_sequence.values())[i-1]
                 #start platooning   
-                car.update_cruise_control(lead_car,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma) 
+                car.update_cruise_control(lead_car,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma,True) 
                 car_labels_updates[i].set_x(car.position)
 
             '''for r,label_ramp in zip(range(len(on_ramp)),car_labels_ramps):

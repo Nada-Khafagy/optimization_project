@@ -6,7 +6,7 @@ import Simulation
 import SA
 import merged_platoon
 import matplotlib.pyplot as plt
-
+import Simulated_annealing
 #import Whole_Systme
 #global variables
 alpha = 10
@@ -67,7 +67,7 @@ for i in range(merged_sequence_size):
 #print(distances_to_merge)
 
 #cruise control 
-while(sequence_full_info_list[merged_sequence_size-1].position < merging_position):    
+'''while(sequence_full_info_list[merged_sequence_size-1].position < merging_position):    
     merged_platoon.platooning(sequence_full_info,delta_time)
 
 for car in sequence_full_info_list:
@@ -75,7 +75,7 @@ for car in sequence_full_info_list:
         print("not feasable")
         break
 
-    
+'''    
 #Example usage
 initial_temperature = 100.0
 cooling_rate = 0.6
@@ -88,12 +88,12 @@ min_v = 60  * 5/18 #m/s
 max_v = 120 * (5/18) #m/s
 linear = True
 
-#platoon.platooning(main_cars)
-print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
+#Simulation.platooning(main_cars,ramp_cars,sequence_full_info)
+#print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
 
 
 
-[best_solution, best_objective, SA_temprature_List, SA_obj_func_List]= SA.simulated_annealing(delta_time, decision_position,initial_main_v,initial_main_a,initial_ramp_v,initial_ramp_a,cars_main_line_no, merging_position,
+'''[best_solution, best_objective, SA_temprature_List, SA_obj_func_List]= SA.simulated_annealing(delta_time, decision_position,initial_main_v,initial_main_a,initial_ramp_v,initial_ramp_a,cars_main_line_no, merging_position,
                         cars_ramp_no, merged_sequence_size ,  initial_temperature, final_temperature, cooling_rate, num_iterations,
                           min_v,max_v,min_a,max_a,min_v_ramp,max_v_ramp,min_a_ramp,max_a_ramp, linear,w1, cars_ramp_no,distances_to_merge)
 print("Best solution:", best_solution)
@@ -107,4 +107,8 @@ plt.title('Plot of a Function')
 plt.legend()
 
 # Show the plot (or you can save it to a file with plt.savefig)
-plt.show()
+plt.show()'''
+Simulated_annealing.simulated_annealing(delta_time,merging_position,num_iterations,
+                                        initial_temperature, final_temperature, cooling_rate,linear,
+                                        min_v,max_v,min_a,max_a,min_v_ramp,max_v_ramp,min_a_ramp,max_a_ramp,
+                                        w1, cars_ramp_no,cars_ramp_merged_no,merged_sequence_size,distances_to_merge)
