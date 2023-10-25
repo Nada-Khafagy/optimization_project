@@ -45,7 +45,7 @@ initial_ramp_accelration = 0 #m/s^2
 
 #assume solution 
 r = cars_ramp_no 
-current_sequence = ['A', 'a', 'B', 'C', 'D', 'E', 'F', 'G']
+current_sequence = ['A', 'a', 'b', 'c', 'B', 'd', 'e', 'C']
 sequence_full_info = dict()
 
 for i in current_sequence:
@@ -86,3 +86,4 @@ linear = True
 
 #platoon.platooning(main_cars)
 print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
+print(sequence_full_info['C'].traveled_time)

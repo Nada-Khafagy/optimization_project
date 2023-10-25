@@ -67,17 +67,21 @@ def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_positi
 
 def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp):
     feasibility = True
-    while(current_solution[merged_sequence_size - 1].position < merging_position):    
-            merged_platoon.platooning(list(current_solution.values()), delta_time)
-            for car in current_solution:
-                #if it is a main car, use main constraints
-                if car.name >= chr(97):
-                    if not car.check_feasibility(min_v, max_v, min_a, max_a):
-                        return False  
-                # if it is a ramp car, use ramp constraints  
-                else:
-                    if not car.check_feasibility(min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp):
-                        return False
+    while(list(current_solution.values())[merged_sequence_size - 1].position < merging_position):    
+        merged_platoon.platooning(current_solution, delta_time)
+        for car in current_solution.values():
+            print(car.traveled_time)
+            print(car.velocity)
+            print(car.acceleration)
+            #if it is a main car, use main constraints
+            if car.name >= chr(97):
+                if not car.check_feasibility(min_v, max_v, min_a, max_a):
+                    return False  
+            # if it is a ramp car, use ramp constraints  
+            else:
+                if not car.check_feasibility(min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp):
+                    return False
+
     return feasibility
 
 #cruise control 
@@ -114,7 +118,7 @@ plt.show()'''
 #SA Example usage
 initial_temperature = 100.0
 cooling_rate = 0.6
-num_iterations = 100 
+num_iterations = 1 
 final_temperature = 5
 
 w1 = 0.5
@@ -128,16 +132,22 @@ current_solution = None
 current_objective = None
 best_solution = None
 best_objective = None
-
-for _ in range(num_iterations):
+flag_finish=True
+first_iteration=False
+k=0
+solution_list=[]
+travel_time=[]
+for j in range(num_iterations):
     #generate new solution
     [new_solution, distances_to_merge, cars_ramp_merged_no,new_solution_dic] = generate_solution(merged_sequence_size,main_cars,ramp_cars,merging_position) 
     #check feasibility
-    if (not check_feasibility(new_solution,min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp)):
-          continue
+    if (not check_feasibility(new_solution_dic,min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp)):
+          k=1
         
     #SA for one iteration (if it is better take it if not get temprature and do the other stuff )
-    [current_solution, current_objective] = Simulated_annealing.simulated_annealing(delta_time,merging_position,merged_sequence_size,num_iterations,
+    if j==0:
+        first_iteration = True
+    [current_solution, current_objective,flag_finish] = Simulated_annealing.simulated_annealing(delta_time,merging_position,merged_sequence_size,num_iterations,first_iteration,
                                         initial_temperature, final_temperature, cooling_rate,linear,
                                         min_v,max_v,min_a,max_a,min_v_ramp,max_v_ramp,min_a_ramp,max_a_ramp,
                                         w1, cars_ramp_no,cars_ramp_merged_no, new_solution_dic,new_solution, distances_to_merge)   
@@ -145,8 +155,14 @@ for _ in range(num_iterations):
         best_solution = current_solution
         best_objective = current_objective
    
-print("Best solution:", best_solution)
+    if (flag_finish==True):
+        break
+for i in best_solution.values():
+    solution_list.append(i.name)
+    travel_time.append(i.traveled_time)
+print("Best solution:", solution_list)
 print("Best objective:", best_objective)
+print("Best Travel Time:", travel_time)
     
 
     
