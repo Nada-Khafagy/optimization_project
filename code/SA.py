@@ -61,7 +61,9 @@ def simulated_annealing(delta_time, decision_position,initial_main_v,initial_mai
     for iteration in range(num_iterations):
         while (1):
             feasibility = True
+            
             #intialize a solution (list of sequences)
+            
             [car_sequence, merged_ramp_size] = randomize_sequence.randomize(merged_sequence_size) 
 
             #map this sequence to cars' info in order to platoon

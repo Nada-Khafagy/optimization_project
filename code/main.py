@@ -108,7 +108,7 @@ plt.legend()
 
 # Show the plot (or you can save it to a file with plt.savefig)
 plt.show()'''
-Simulated_annealing.simulated_annealing(delta_time,merging_position,num_iterations,
+Simulated_annealing.simulated_annealing(delta_time,merging_position,
                                         initial_temperature, final_temperature, cooling_rate,linear,
                                         min_v,max_v,min_a,max_a,min_v_ramp,max_v_ramp,min_a_ramp,max_a_ramp,
                                         w1, cars_ramp_no,cars_ramp_merged_no,merged_sequence_size,distances_to_merge)
