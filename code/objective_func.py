@@ -1,10 +1,10 @@
-def objective_func(w1, r_total,merge_r, sequence_car_info,distances_to_merge, min_v,max_v):
+def objective_func(w1, r_total ,merge_r,sequence_full_info_list,distances_to_merge, min_v,max_v):
     f1 = merge_r/r_total
     sum1 = 0
     sum2 = 0
     sum3 = 0
     sum4 = 0
-    for car,i in zip(sequence_car_info.values(),range(len(sequence_car_info.values()))):
+    for car,i in zip(sequence_full_info_list,range(len(sequence_full_info_list))):
         if car.name[0] >= chr(97):
             continue
         sum1 = sum1 + car.traveled_time
