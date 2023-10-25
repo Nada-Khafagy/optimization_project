@@ -1,9 +1,11 @@
 import vehicle_class
 import random
-main_cars_platoon = dict() #list of car object
-ramp_cars = dict() #i want to mak the main line a list as well but to edit that i have no time at the moment
+
+main_cars_platoon = dict() #dict of main cars object
+ramp_cars = dict() #dict of ramp cars object
 initial_pos_upper=8
 initial_pos_lower=5
+
 def initalize_cars(initial_main_p,initial_main_v,initial_main_a,initial_ramp_p,initial_ramp_v,initial_ramp_a,cars_main_line_no,cars_ramp_no):
 
     for i in range(cars_main_line_no):
@@ -40,6 +42,7 @@ def initalize_cars(initial_main_p,initial_main_v,initial_main_a,initial_ramp_p,i
     '''#print created ramp cars
     for c in ramp_cars:
         print(c)'''
+    
     return (main_cars_platoon,ramp_cars)
 
 

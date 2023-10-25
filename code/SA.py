@@ -24,7 +24,7 @@ def simulated_annealing(delta_time, decision_position,initial_main_v,initial_mai
                                                         decision_position-10,initial_ramp_v,initial_ramp_a,
                                                         cars_main_line_no,cars_ramp_no)
         for i in car_sequence:
-            if i in main_cars:
+            if i in main_cars :
                 car_sequence_info[i] = main_cars[i]
             elif i in ramp_cars :
                 car_sequence_info[i] = ramp_cars[i]
