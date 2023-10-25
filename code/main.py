@@ -44,7 +44,7 @@ while(list(sequence_full_info.values())[7].position<merging_position):
     distances_to_merge = merged_platoon.platooning(sequence_full_info,delta_time)
 #platoon.platooning(main_cars)
 
-print(distances_to_merge)
-#print(objective_func.objective_func(0.5,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
+#print(distances_to_merge)
+print(objective_func.objective_func(0.5,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
 
 
