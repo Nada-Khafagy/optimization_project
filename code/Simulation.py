@@ -28,7 +28,7 @@ def visualization(main_road,on_ramp,car_sequence,delta_time,decision_position,me
             car_index = list(main_road.values()).index(car)
             car_labels_updates.append(car_labels[car_index])
         else:
-            car_index =list(on_ramp.values()).index(i)
+            car_index =list(on_ramp.values()).index(car)
             car_labels_updates.append(car_labels_ramps[car_index])
     car_markers = ax.scatter([car.position for car in main_road.values()], [30] * len(main_road), marker=scatter_custom.custom_marker(4,2,-0), 
                              label=[car.name for car in main_road.values()], s=400)

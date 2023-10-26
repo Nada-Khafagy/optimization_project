@@ -29,7 +29,6 @@ delta_time = 0.01 #seconds, sampling time
 #parameters for intalizing cars info
 random_pos_lower = 5
 random_pos_upper = 8
-
 cars_main_num = random.randint(5,20) #number of main cars generated
 cars_ramp_num = random.randint(5,10) ##number of ramp cars generated
 merged_sequence_size = random.randint(min(cars_main_num,cars_ramp_num) ,cars_main_num+cars_ramp_num) #maximum size for the optimization algorithm
