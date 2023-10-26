@@ -3,7 +3,6 @@ import objective_func
 import platoon
 import randomize_sequence
 import Simulation
-import SA
 import merged_platoon
 import matplotlib.pyplot as plt
 import Simulated_annealing
@@ -102,6 +101,7 @@ travel_time=[]
 
 #SA Loop
 for j in range(num_iterations):
+    
     #generate new solution
     (main_cars,ramp_cars) = initialization.initalize_cars(decision_position,initial_main_v,initial_main_a,
                                                       decision_position-10,initial_ramp_v,initial_ramp_a,

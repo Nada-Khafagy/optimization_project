@@ -12,10 +12,10 @@ SA_obj_func_List = []
 delta_objective=0
 current_objective=0
 
-def simulated_annealing(delta_time,merging_position,merged_sequence_size,num_iterations,first_iteration,
+def simulated_annealing(num_iterations,first_iteration,
                         initial_temperature, final_temperature, cooling_rate,linear,
-                        min_v,max_v,min_a,max_a,min_v_ramp,max_v_ramp,min_a_ramp,max_a_ramp,
-                        w1, cars_ramp_no,cars_ramp_merged_no,new_solution_dic, new_solution_list,distances_to_merge):
+                        min_v,max_v,
+                        w1, cars_ramp_no,cars_ramp_merged_no,new_solution_dic,distances_to_merge):
     global current_objective, current_solution
     flag_finish=False
     if(first_iteration):
