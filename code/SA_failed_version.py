@@ -1,6 +1,6 @@
 import numpy as np
 import objective_func
-import randomize_sequence
+from randomize import randomize_sequence
 import math
 import Simulation
 import initialization
@@ -16,7 +16,7 @@ def simulated_annealing(delta_time, decision_position,initial_main_v,initial_mai
     while (1):
         feasibility = True 
         #intialize a solution (list of sequences)
-        [car_sequence, merged_ramp_size] = randomize_sequence.randomize(merged_sequence_size) 
+        [car_sequence, merged_ramp_size] = randomize_sequence(merged_sequence_size) 
 
         #map this sequence to cars' info in order to platoon
         car_sequence_info = dict()

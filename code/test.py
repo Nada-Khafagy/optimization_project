@@ -1,7 +1,7 @@
 import initialization
 import objective_func
 import platoon
-import randomize_sequence
+from randomize import randomize_sequence
 import Simulation
 import merged_platoon
 import matplotlib.pyplot as plt

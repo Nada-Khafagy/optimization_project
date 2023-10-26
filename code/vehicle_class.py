@@ -1,6 +1,6 @@
 #this is a vehicle class that defines a car
 class Vehicle:
-    
+
     def __init__(self, name, initial_position, initial_velocity, initial_acceleration):
         self.name = name
         self.position = initial_position
@@ -38,6 +38,5 @@ class Vehicle:
         if (min_v >= self.velocity) or (self.velocity >= max_v):
             return False
         if (min_a >= self.acceleration) or (self.acceleration>= max_a) :
-           
             return False
         return True
