@@ -1,9 +1,6 @@
 import initialization
-import objective_func
-import platoon
 import randomize_sequence
 import Simulation
-import SA
 import merged_platoon
 import matplotlib.pyplot as plt
 import Simulated_annealing
@@ -23,10 +20,10 @@ min_v = 10 * (5/18) #m/s 2.777
 max_v = 120 * (5/18) #m/s 33.33
 min_v_ramp = 5 * (5/18) #m/s 1.388
 max_v_ramp = 120 * (5/18) #m/s33.3
-min_a_ramp = -8 #m/s^2
-max_a_ramp = 8 #m/s^2
-min_a = -10 #m/s^2
-max_a = 10 #m/s^2
+min_a_ramp = -10 #m/s^2
+max_a_ramp = 10 #m/s^2
+min_a = -15 #m/s^2
+max_a = 15 #m/s^2
 
 
 #intlizing parameters for cars info
@@ -97,9 +94,12 @@ best_objective = None
 flag_finish=True
 first_iteration=False
 best_solution_list=[]
+main_cars_list =[]
+on_ramp_list =[]
 current_solution_list=[]
 travel_time=[]
-
+best_ramp=dict()
+best_main=dict()
 #SA Loop
 for j in range(num_iterations):
     #generate new solution
@@ -122,7 +122,8 @@ for j in range(num_iterations):
     if (best_solution is None) or (best_objective < current_objective) :
         best_solution = current_solution
         best_objective = current_objective
-   
+        best_ramp=ramp_cars  # save actual dresess of the accepted cars in the solution
+        best_main=main_cars
     if (flag_finish==True):
         break
     for i in current_solution.values():
@@ -133,10 +134,15 @@ for j in range(num_iterations):
 
 for i in best_solution.values():
     best_solution_list.append(i.name)
+for i in main_cars.values():
+    main_cars_list.append(i.name)
+for i in ramp_cars.values():
+    on_ramp_list.append(i.name)
 print("Best solution:", best_solution_list)
 print("Best solution:", best_objective)
-
-    
+print("main cars:", main_cars_list)
+print("ramp cars:", on_ramp_list)
+#Simulation.platooning(best_main,best_ramp,best_solution)    
 
 
 #cruise control 

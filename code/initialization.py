@@ -31,7 +31,7 @@ def initalize_cars(initial_main_p,initial_main_v,initial_main_a,initial_ramp_p,i
         if i == 0:
             position = initial_ramp_p #starts with 0
         else:
-            position = ramp_cars[chr(97+i-1)].position - round(random.uniform(initial_pos_lower, initial_pos_upper))
+            position = ramp_cars[chr(97+i-1)].position - 5#round(random.uniform(initial_pos_lower, initial_pos_upper))
 
         velocity = initial_ramp_v
         accelration = initial_ramp_a
