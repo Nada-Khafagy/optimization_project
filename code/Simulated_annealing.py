@@ -18,7 +18,7 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
     if linear :          
         curr_temperature = initial_temperature - cooling_rate*iteration_index
     else :
-        curr_temperature = initial_temperature * cooling_rate
+        curr_temperature = initial_temperature * (cooling_rate**iteration_index)
      
     if delta_objective > 0:
         current_solution = new_solution_dic
@@ -29,8 +29,6 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
         if acceptance_prob > np.random.rand():
             current_solution = new_solution_dic
             current_objective = new_objective
-
-    
 
     return current_solution, current_objective, curr_temperature
 

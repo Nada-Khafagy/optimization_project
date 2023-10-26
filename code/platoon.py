@@ -4,7 +4,6 @@ import scatter_custom
 #animation for the platoon on the main line
 def platooning(final_sequence,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma ):
     car_labels = []  # List to store car labels
-
     #inialize grid
     # Create a 2D grid-like representation
     fig, ax = plt.subplots(figsize=(15, 2))  # Adjust the figsize to make the plot wider

@@ -1,7 +1,7 @@
 import vehicle_class
 import random
 
-def initalize_cars(initial_main_p,initial_main_v,initial_main_a,initial_ramp_p,initial_ramp_v,initial_ramp_a,cars_main_no,cars_ramp_no,random_pos_lower,random_pos_upper):
+def create_cars(initial_main_p,initial_main_v,initial_main_a,initial_ramp_p,initial_ramp_v,initial_ramp_a,cars_main_no,cars_ramp_no,random_pos_lower,random_pos_upper):
 
     #initalize cars on main line
     main_cars = dict() #dict of main cars object
