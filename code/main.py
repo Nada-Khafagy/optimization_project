@@ -5,27 +5,17 @@ import matplotlib.pyplot as plt
 import Simulated_annealing
 import platoon
 import Simulation
+import random
 
 #constraints
 min_v_main = 10 * (5/18) #m/s 2.777 
 max_v_main = 120 * (5/18) #m/s 33.33
 min_v_ramp = 5 * (5/18) #m/s 1.388
 max_v_ramp = 120 * (5/18) #m/s33.3
-min_a_main = -10 #m/s^2
-max_a_main = 10 #m/s^2
-min_a_ramp = -8 #m/s^2
-max_a_ramp = 8 #m/s^2
-
-#parameters for intalizing cars info
-random_pos_lower=5
-random_pos_upper=8
-merged_sequence_size = 8 #maximum size for the optimization algorithm
-cars_main_num = 10 #number of main cars generated
-cars_ramp_num = 5 ##number of ramp cars generated
-initial_main_v = 60  * 5/18  #m/s
-initial_main_a = 3 #m/s^2
-initial_ramp_v = 55 * 5/18 #m/s
-initial_ramp_a = 0 #m/s^2
+min_a_main = -20 #m/s^2
+max_a_main = 20 #m/s^2
+min_a_ramp = -20 #m/s^2
+max_a_ramp =  20 #m/s^2
 
 #parameters for cruise control
 alpha = 1 #k1 for cruise control
@@ -36,11 +26,26 @@ decision_position = 40#m, position where we apply cruse control
 merging_position = 140 #m, position of point of merging
 delta_time = 0.01 #seconds, sampling time
 
+#parameters for intalizing cars info
+random_pos_lower = 5
+random_pos_upper = 8
+
+cars_main_num = random.randint(5,20) #number of main cars generated
+cars_ramp_num = random.randint(5,10) ##number of ramp cars generated
+merged_sequence_size = random.randint(min(cars_main_num,cars_ramp_num) ,cars_main_num+cars_ramp_num) #maximum size for the optimization algorithm
+intial_main_p = decision_position - random.randint(10, 30)
+intial_ramp_p = decision_position
+initial_main_v = 60  * 5/18  #m/s
+initial_main_a = 3 #m/s^2
+initial_ramp_v = 50 * 5/18 #m/s
+initial_ramp_a = 0 #m/s^2
+
+
+
 #create cars
-(main_cars,ramp_cars) = create_cars(decision_position,initial_main_v,initial_main_a,
-                                                      decision_position-10,initial_ramp_v,initial_ramp_a,
+(main_cars,ramp_cars) = create_cars(intial_main_p,initial_main_v,initial_main_a,
+                                                      intial_ramp_p,initial_ramp_v,initial_ramp_a,
                                                       cars_main_num,cars_ramp_num,random_pos_lower,random_pos_upper)
- 
 #Randomize Solution
 def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_position):
     #assume solution 
@@ -52,11 +57,12 @@ def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_positi
         elif i in ramp_cars :
             sequence_full_info[i] = ramp_cars[i]
     sequence_full_info_list = list(sequence_full_info.values())
+
     distances_to_merge = []
-    for i in range(merged_sequence_size):
+    for car in range(merged_sequence_size):
         car = sequence_full_info_list[i]        
         distances_to_merge.append(merging_position - car.position)
-    #print(distances_to_merge)  
+  
     return  distances_to_merge, cars_ramp_merged_no,sequence_full_info
 
 #check constraints
@@ -73,8 +79,11 @@ def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_
             else:
                 if not car.check_feasibility(min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp):
                     return False
+    
+    #print(list(current_solution.values())[merged_sequence_size - 1].position)
     #print(list(current_solution.values())[merged_sequence_size - 1].traveled_time)
-    #print(list(current_solution.values())[merged_sequence_size - 1].position )      
+    #print(list(current_solution.values())[merged_sequence_size - 1].position )  
+
     return feasibility
 
 
@@ -100,12 +109,15 @@ SA_obj_func_List = []
 iteration_index = -1
 #SA Loop
 for _ in range(num_iterations):
+    #return cars to initial conditions
+    for car in main_cars.values():
+        car.return_to_initial_conditions()
+    for car in ramp_cars.values() :
+        car.return_to_initial_conditions()
 
     #generate new solution
     [distances_to_merge, cars_ramp_merged_no,new_solution_dic] = generate_solution(merged_sequence_size,main_cars,ramp_cars,merging_position)
-    #return cars to initial conditions
-    for car in new_solution_dic.values():
-        car.return_to_initial_conditions()
+     
 
     #check feasibility
     if (not check_feasibility(new_solution_dic,min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp)):

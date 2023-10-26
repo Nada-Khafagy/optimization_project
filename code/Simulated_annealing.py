@@ -4,9 +4,6 @@ import math
 import matplotlib.pyplot as plt
 
 
-delta_objective = 0
-current_objective = 0
-
 def simulated_annealing(iteration_index,current_solution,current_objective,
                         initial_temperature, cooling_rate,linear,
                         min_v_main,max_v_main,

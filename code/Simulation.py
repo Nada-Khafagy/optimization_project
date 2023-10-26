@@ -68,10 +68,10 @@ def visualization(main_road,on_ramp,car_sequence,delta_time,decision_position,me
                     "{:.2f}".format(main_road['F'].distance_to_lead),"{:.2f}".format(main_road['G'].distance_to_lead),
                     "{:.2f}".format(main_road['H'].distance_to_lead),"{:.2f}".format(main_road['I'].distance_to_lead,))'''
                 
-            for r,label_ramp in zip(range(len(on_ramp)),car_labels_ramps):
+            '''for r,label_ramp in zip(range(len(on_ramp)),car_labels_ramps):
                 car_ramp = list(on_ramp.values())[r]
                 car_ramp.update_kinematics(delta_time)
-                label_ramp.set_x(car_ramp.position)
+                label_ramp.set_x(car_ramp.position)'''
 
             car_markers.set_offsets([(car.position, 30) for car in main_road.values()])
             car_markers_ramp.set_offsets([(car.position, 5) for car in on_ramp.values()])

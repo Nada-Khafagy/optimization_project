@@ -14,7 +14,6 @@ def objective_func(w1, r_total ,merge_r,sequence_full_info_list,distances_to_mer
 
         sum2 = sum2 + (distances_to_merge[i]/min_v_main)
         sum3 = sum3 + (distances_to_merge[i]/max_v_main)
-    
 
     f2 = (sum2-sum1) / (sum2-sum3)
 
@@ -24,6 +23,7 @@ def objective_func(w1, r_total ,merge_r,sequence_full_info_list,distances_to_mer
         
 
     '''print("value of sum1 :",sum1)
+    print("distance to merge :",distances_to_merge[i])
     print("value of sum2 :",sum2)
     print("value of sum3 :",sum3)
     print("value of F1 :",f1)

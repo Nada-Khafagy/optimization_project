@@ -1,6 +1,5 @@
 #this is a vehicle class that defines a car
 class Vehicle:
-
     def __init__(self, name, initial_position, initial_velocity, initial_acceleration):
         self.name = name
         self.initial_position = initial_position
@@ -26,8 +25,10 @@ class Vehicle:
         self.acceleration = af
         self.position += (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
         self.velocity += self.acceleration*delta_time
+        
         if (self.position <= merging_position) and (decision_flag==True):
             self.traveled_time += delta_time
+
 
     def update_kinematics(self, delta_time):
         self.position +=  (self.velocity * delta_time) + (0.5 * self.acceleration* (delta_time*delta_time))
