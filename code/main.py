@@ -10,9 +10,9 @@ import Simulated_annealing
 
 
 #global variables
-alpha = 10
-beta = 20
-gamma = 20
+alpha = 10 #k1 for cruise control
+beta = 20 #k2 for cruise control
+gamma = 20 #k3for cruise control
 decision_position = 40#m, position where we apply cruse control
 merging_position = 140 #m, position of point of merging
 delta_time = 0.01 #seconds, sampling time
@@ -30,8 +30,8 @@ max_a = 10 #m/s^2
 
 #intlizing parameters for cars info
 merged_sequence_size = 8 #maximum size for the optimization algorithm
-cars_main_line_no = 10 #number of main line generated cars
-cars_ramp_no = 5
+cars_main_line_no = 10 #number of main cars generated
+cars_ramp_no = 5 ##number of ramp cars generated
 initial_main_v = 60  * 5/18  #m/s
 initial_main_a = 3 #m/s^2
 initial_ramp_v = 55 * 5/18 #m/s
@@ -59,7 +59,7 @@ def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_positi
     return sequence_full_info_list, distances_to_merge, cars_ramp_merged_no,sequence_full_info
 
 
-#chech constraints
+#check constraints
 def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp):
     feasibility = True
     while(list(current_solution.values())[merged_sequence_size - 1].position < merging_position): 
@@ -115,10 +115,10 @@ for j in range(num_iterations):
     #SA for one iteration (if it is better take it if not get temprature and do the other stuff )
     if j==0:
         first_iteration = True
-    [current_solution, current_objective,flag_finish] = Simulated_annealing.simulated_annealing(delta_time,merging_position,merged_sequence_size,num_iterations,first_iteration,
+    [current_solution, current_objective,flag_finish] = Simulated_annealing.simulated_annealing(num_iterations,first_iteration,
                                         initial_temperature, final_temperature, cooling_rate,linear,
-                                        min_v,max_v,min_a,max_a,min_v_ramp,max_v_ramp,min_a_ramp,max_a_ramp,
-                                        w1, cars_ramp_no,cars_ramp_merged_no, new_solution_dic,new_solution, distances_to_merge)   
+                                        min_v,max_v,
+                                        w1, cars_ramp_no,cars_ramp_merged_no, new_solution_dic, distances_to_merge)   
     if (best_solution is None) or (best_objective < current_objective) :
         best_solution = current_solution
         best_objective = current_objective

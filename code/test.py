@@ -3,7 +3,6 @@ import objective_func
 import platoon
 import randomize_sequence
 import Simulation
-import SA
 import merged_platoon
 import matplotlib.pyplot as plt
 
