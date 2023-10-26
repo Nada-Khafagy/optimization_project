@@ -12,3 +12,4 @@ to do list :
 - change intial positin ramp to the first car on ramp (rest of the cars are already randomized based on value of first cars)
 - make ditance to lead dynamic
 - mqake visualzation start from zero and sraet platooning from decsision point 
+- choose what to do if no main line cars in solution (reject?)
