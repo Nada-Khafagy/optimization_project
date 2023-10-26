@@ -20,8 +20,8 @@ def randomize_sequence(merged_sequence_size, cars_ramp_num):
         else:
             current_sequence.append(chr(97+r))
             r+=1
-
     print("Randomized Sequence is: ", current_sequence)
+    print("Randomized Sequence size: ", len(current_sequence))
     return current_sequence,r
 
 

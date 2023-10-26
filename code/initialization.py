@@ -10,7 +10,7 @@ def create_cars(initial_main_p,initial_main_v,initial_main_a,initial_ramp_p,init
         if i == 0:
             position = initial_main_p #starts with 0
         else:
-            position = main_cars[chr(65+i-1)].position - 6 #distance to lead
+            position = main_cars[chr(65+i-1)].position - round(random.uniform(random_pos_lower, random_pos_upper)) #distance to lead
         velocity = initial_main_v
         accelration = initial_main_a      
         car = vehicle_class.Vehicle(name, position, velocity, accelration)

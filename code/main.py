@@ -31,7 +31,7 @@ random_pos_lower = 5
 random_pos_upper = 8
 cars_main_num = random.randint(5,20) #number of main cars generated
 cars_ramp_num = random.randint(5,10) ##number of ramp cars generated
-merged_sequence_size = random.randint(min(cars_main_num,cars_ramp_num) ,cars_main_num+cars_ramp_num) #maximum size for the optimization algorithm
+merged_sequence_size = random.randint(min(cars_main_num,cars_ramp_num) ,cars_main_num) #maximum size for the optimization algorithm
 intial_main_p = decision_position - random.randint(10, 30)
 intial_ramp_p = decision_position
 initial_main_v = 60  * 5/18  #m/s
@@ -50,18 +50,18 @@ def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_positi
     #assume solution 
     [car_sequence,cars_ramp_merged_no] = randomize_sequence(merged_sequence_size,cars_ramp_num)
     sequence_full_info = dict()
-    for i in car_sequence:  
-        if i in main_cars:
-            sequence_full_info[i] = main_cars[i]
-        elif i in ramp_cars :
-            sequence_full_info[i] = ramp_cars[i]
-    sequence_full_info_list = list(sequence_full_info.values())
-
+    for car in car_sequence:  
+        if car in main_cars:
+            sequence_full_info[car] = main_cars[car]
+        elif car in ramp_cars :
+            sequence_full_info[car] = ramp_cars[car]
+        else:
+            print("not in both")
+    
     distances_to_merge = []
-    for i in range(merged_sequence_size):
-        car = sequence_full_info_list[i]        
+    for car in sequence_full_info.values():    
         distances_to_merge.append(merging_position - car.position)
-  
+
     return  distances_to_merge, cars_ramp_merged_no,sequence_full_info
 
 #check constraints
@@ -78,11 +78,7 @@ def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_
             else:
                 if not car.check_feasibility(min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp):
                     return False
-    
-    #print(list(current_solution.values())[merged_sequence_size - 1].position)
-    #print(list(current_solution.values())[merged_sequence_size - 1].traveled_time)
-    #print(list(current_solution.values())[merged_sequence_size - 1].position )  
-
+     
     return feasibility
 
 
