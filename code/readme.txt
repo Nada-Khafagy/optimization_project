@@ -1,4 +1,10 @@
 go to optimization_project\code
 run main.py
-we have implemented platooning and you can see the map of the cars mooving
-enjoy looking at the vehicles of the main line on the map :) 
+
+Rundomized sequences is  printed
+Accepted sequences after feasibility check is printed
+opjective function for the accepted sequences are printed
+and Finally, the best solution for the SA is saves and printed
+ :) 
+
+

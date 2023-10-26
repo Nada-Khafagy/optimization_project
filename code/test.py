@@ -45,7 +45,7 @@ initial_ramp_accelration = 0 #m/s^2
 
 #assume solution 
 r = cars_ramp_no 
-current_sequence = ['A', 'a', 'b', 'c', 'B', 'd', 'e', 'C']
+current_sequence =['A', 'a', 'B', 'C', 'D', 'E', 'b', 'c']
 sequence_full_info = dict()
 
 for i in current_sequence:
@@ -70,6 +70,8 @@ for i in range(merged_sequence_size):
 #cruise control 
 while(sequence_full_info_list[merged_sequence_size-1].position < merging_position):    
     merged_platoon.platooning(sequence_full_info,delta_time)
+    for car in list(sequence_full_info.values()):
+        print(car.velocity, car.acceleration)
 
 
 #Example usage
@@ -86,4 +88,3 @@ linear = True
 
 #platoon.platooning(main_cars)
 print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
-print(sequence_full_info['C'].traveled_time)

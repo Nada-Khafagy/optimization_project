@@ -23,7 +23,7 @@ def randomize(merged_sequence_size):
             r+=1
 
     #print(sequence_car_info)
-    #print(current_sequence)
+    print("Randomized Sequence is: ", current_sequence)
     return current_sequence,r
 
 

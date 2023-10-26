@@ -17,4 +17,5 @@ def objective_func(w1, r_total ,merge_r,sequence_full_info_list,distances_to_mer
 
     w2 = 1 - w1
     value = w1 * f1 + w2 * f2
+    
     return value 

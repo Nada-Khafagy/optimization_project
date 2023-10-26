@@ -35,8 +35,9 @@ class Vehicle:
         return f"Vehicle: Name = {self.name}, Position = {self.position}, Velocity={self.velocity}, Accelration = {self.acceleration}, Distance to Lead={self.distance_to_lead}, traveled time = {self.traveled_time}"
     
     def check_feasibility (self, min_v, max_v, min_a, max_a):
-        if (min_v >= self.velocity) or (self.velocity >= max_v) :
+        if (min_v >= self.velocity) or (self.velocity >= max_v):
             return False
         if (min_a >= self.acceleration) or (self.acceleration>= max_a) :
+           
             return False
         return True
