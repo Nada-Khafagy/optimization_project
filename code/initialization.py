@@ -23,12 +23,7 @@ def create_cars(initial_main_p,initial_main_v,initial_main_a,initial_ramp_p,init
         if i == 0:
             position = initial_ramp_p #starts with 0
         else:
-<<<<<<< HEAD
-            position = ramp_cars[chr(97+i-1)].position - 5#round(random.uniform(initial_pos_lower, initial_pos_upper))
-
-=======
             position = ramp_cars[chr(97+i-1)].position - round(random.uniform(random_pos_lower, random_pos_upper))
->>>>>>> ee5baf9691e1672f00b39e9c572fcbc02e58aeaa
         velocity = initial_ramp_v
         accelration = initial_ramp_a        
         car = vehicle_class.Vehicle(name, position, velocity, accelration)
