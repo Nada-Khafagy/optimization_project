@@ -54,7 +54,7 @@ def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_positi
         distances_to_merge.append(merging_position - car.position)
     #print(distances_to_merge)
     
-    return sequence_full_info_list, distances_to_merge, cars_ramp_merged_no,sequence_full_info
+    return sequence_full _info_list, distances_to_merge, cars_ramp_merged_no,sequence_full_info
 
 
 #chech constraints
