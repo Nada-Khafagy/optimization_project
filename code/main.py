@@ -31,7 +31,11 @@ random_pos_lower = 5
 random_pos_upper = 8
 cars_main_num = random.randint(5,20) #number of main cars generated
 cars_ramp_num = random.randint(5,10) ##number of ramp cars generated
-merged_sequence_size = random.randint(min(cars_main_num,cars_ramp_num) ,cars_main_num) #maximum size for the optimization algorithm
+solution_size = random.randint(min(cars_main_num,cars_ramp_num) ,cars_main_num) #maximum size for the optimization algorithm
+#for testing SA with same scenario - delete later
+cars_main_num = 10
+cars_ramp_num = 5 
+solution_size = 10
 intial_main_p = decision_position - random.randint(10, 30)
 intial_ramp_p = decision_position
 initial_main_v = 60  * 5/18  #m/s
@@ -43,8 +47,8 @@ initial_ramp_a = 0 #m/s^2
 
 #create cars
 (main_cars,ramp_cars) = create_cars(intial_main_p,initial_main_v,initial_main_a,
-                                                      intial_ramp_p,initial_ramp_v,initial_ramp_a,
-                                                      cars_main_num,cars_ramp_num,random_pos_lower,random_pos_upper)
+                                    intial_ramp_p,initial_ramp_v,initial_ramp_a,
+                                    cars_main_num,cars_ramp_num,random_pos_lower,random_pos_upper)
 #Randomize Solution
 def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_position):
     #assume solution 
@@ -67,7 +71,7 @@ def generate_solution(merged_sequence_size, main_cars, ramp_cars, merging_positi
 #check constraints
 def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp):
     feasibility = True
-    while(list(current_solution.values())[merged_sequence_size - 1].position < merging_position): 
+    while(list(current_solution.values())[solution_size - 1].position < merging_position): 
         merged_platoon.platooning(current_solution,delta_time,decision_position,merging_position,desired_distance_bet_cars,alpha,beta,gamma)        
         for car in current_solution.values():
             #if it is a main car, use main constraints
@@ -84,11 +88,11 @@ def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_
 
 
 #SA Example usage
-initial_temperature = 1000.0
-cooling_rate = 0.6
+initial_temperature = 500.0
+cooling_rate = 2
 num_iterations = 1000
 final_temperature = 0.05
-weight_func_1 = 0.5
+weight_func_1 = 0.7
 linear = True
 curr_solution = None
 curr_objective = 0
@@ -111,7 +115,7 @@ for _ in range(num_iterations):
         car.return_to_initial_conditions()
 
     #generate new solution
-    [distances_to_merge, cars_ramp_merged_no,new_solution_dic] = generate_solution(merged_sequence_size,main_cars,ramp_cars,merging_position)
+    [distances_to_merge, cars_ramp_merged_no,new_solution_dic] = generate_solution(solution_size,main_cars,ramp_cars,merging_position)
      
 
     #check feasibility
@@ -120,7 +124,7 @@ for _ in range(num_iterations):
     iteration_index += 1
     #SA for one iteration (if it is better take it if not get temprature and do the other stuff )
     [curr_solution, curr_objective, curr_temperature] = Simulated_annealing.simulated_annealing(iteration_index, curr_solution, curr_objective,
-                                        initial_temperature, cooling_rate,linear,
+                                        initial_temperature,final_temperature, cooling_rate,linear,
                                         min_v_main,max_v_main,
                                         weight_func_1, cars_ramp_num,cars_ramp_merged_no, new_solution_dic, distances_to_merge)  
      
@@ -128,16 +132,16 @@ for _ in range(num_iterations):
         best_solution = curr_solution
         best_objective = curr_objective
    
-    if (curr_temperature<=final_temperature):
+    if (curr_temperature <= final_temperature):
         break
 
     SA_temprature_List.append(curr_temperature)
     SA_obj_func_List.append(curr_objective)
-
-    print("Accepted Sequence is: ", [car.name for car in curr_solution.values()] )
-    print("current objective:", curr_objective)
     
-print("Best solution:", [car.name for car in best_solution.values()])
+    print("Accepted Sequence is: ", [0 if car.name>=chr(97) else 1 for car in curr_solution.values()] )
+    print("current objective:", curr_objective)
+
+print("Best solution:", [0 if car.name>=chr(97) else 1 for car in best_solution.values()])
 print("Best objective:", best_objective)
 
 
@@ -150,6 +154,11 @@ plt.gca().invert_xaxis()
 # Show the plot (or you can save it to a file with plt.savefig)
 plt.show()
 
+#return cars to initial conditions
+for car in main_cars.values():
+    car.return_to_initial_conditions()
+for car in ramp_cars.values() :
+    car.return_to_initial_conditions()
     
 #changed function parameters, check file before uncommenting
 Simulation.visualization(main_cars,ramp_cars,best_solution,delta_time,decision_position,merging_position,desired_distance_bet_cars,alpha,beta,gamma )

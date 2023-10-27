@@ -9,8 +9,7 @@ def platooning(full_sequence,delta_time,decision_position,merging_position,desir
             #print(car.position)
             #if car.position > decision_position:
             #        flag = False
-            car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma,True) 
-            
+            car.update_cruise_control(None,delta_time,merging_position,desired_distance_bet_cars,alpha,beta,gamma,True)            
         #Not first car
         #get its leading car since it has a leader
         else:

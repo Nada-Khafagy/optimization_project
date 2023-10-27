@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def simulated_annealing(iteration_index,current_solution,current_objective,
-                        initial_temperature, cooling_rate,linear,
+                        initial_temperature,final_temperature,cooling_rate,linear,
                         min_v_main,max_v_main,
                         weight_func_1, cars_ramp_no,cars_ramp_merged_no,new_solution_dic,distances_to_merge):
 
@@ -16,7 +16,10 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
         curr_temperature = initial_temperature - cooling_rate*iteration_index
     else :
         curr_temperature = initial_temperature * (cooling_rate**iteration_index)
-     
+
+    if curr_temperature < final_temperature :
+        return current_solution, current_objective, curr_temperature
+
     if delta_objective > 0:
         current_solution = new_solution_dic
         current_objective = new_objective
@@ -26,6 +29,9 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
         if acceptance_prob > np.random.rand():
             current_solution = new_solution_dic
             current_objective = new_objective
+
+
+     
 
     return current_solution, current_objective, curr_temperature
 
