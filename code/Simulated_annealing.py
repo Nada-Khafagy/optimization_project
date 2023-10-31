@@ -1,4 +1,4 @@
-import numpy as np
+import random
 import objective_func
 import math
 import matplotlib.pyplot as plt
@@ -27,7 +27,7 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
     else :
         acceptance_prob = (math.e)**(((-1 * delta_objective)) / curr_temperature )
         
-        if acceptance_prob > np.random.rand():
+        if acceptance_prob > random.randint(0,1):
             current_solution = new_solution_dic
             current_objective = new_objective
 
