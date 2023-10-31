@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 
 
-def simulated_annealing(iteration_index,current_solution,current_objective,
+def simulated_annealing(iteration_index,current_solution,current_objective,best_solution,best_objective,
                         initial_temperature,curr_temperature,cooling_rate,linear,num_iterations,
                         min_v_main,max_v_main,
                         weight_func_1, cars_ramp_no,cars_ramp_merged_no,new_solution_dic,distances_to_merge):
@@ -27,7 +27,10 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
             print("r is",r)
             if acceptance_prob > r:
                 current_solution = new_solution_dic
-                current_objective = new_objective    
+                current_objective = new_objective 
+            if (best_solution is None) or (best_objective < current_objective) :
+                best_solution = current_solution
+                best_objective = current_objective   
     #apply cooling schedule
     if linear :          
         curr_temperature = initial_temperature - cooling_rate*iteration_index
@@ -37,7 +40,7 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
 
      
 
-    return current_solution, current_objective, curr_temperature
+    return current_solution, current_objective, best_solution, best_objective, curr_temperature
 
 
 
