@@ -88,11 +88,11 @@ def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_
 
 
 #SA Example usage
-initial_temperature = 500.0
-cooling_rate = 2
+initial_temperature = 1000
+cooling_rate = 30
 num_iterations = 1000
 final_temperature = 0.05
-weight_func_1 = 0.7
+weight_func_1 = 0.3
 linear = True
 curr_solution = None
 curr_objective = 0

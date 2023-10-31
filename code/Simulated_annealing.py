@@ -17,14 +17,15 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
     else :
         curr_temperature = initial_temperature * (cooling_rate**iteration_index)
 
+    #if it became zero or negative stop, why not leave it to return at ent of code? cuz might cause divide by zero
     if curr_temperature < final_temperature :
         return current_solution, current_objective, curr_temperature
 
-    if delta_objective > 0:
+    if delta_objective > 0: #we are maximizing so if it is positive, it is a good thing
         current_solution = new_solution_dic
         current_objective = new_objective
     else :
-        acceptance_prob = ((math.e)**(-1 * delta_objective)) / curr_temperature 
+        acceptance_prob = (math.e)**(((-1 * delta_objective)) / curr_temperature )
         
         if acceptance_prob > np.random.rand():
             current_solution = new_solution_dic
