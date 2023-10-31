@@ -112,33 +112,32 @@ SA_obj_func_List = []
 
 #SA Loop
 while(curr_temperature > final_temperature) and (iteration_index<maximum_steps_num):
+    for _ in range(num_iterations):
+        #return cars to initial conditions
+        for car in main_cars.values():
+            car.return_to_initial_conditions()
+        for car in ramp_cars.values() :
+            car.return_to_initial_conditions()
 
-    #return cars to initial conditions
-    for car in main_cars.values():
-        car.return_to_initial_conditions()
-    for car in ramp_cars.values() :
-        car.return_to_initial_conditions()
+        #generate new solution
+        [distances_to_merge, cars_ramp_merged_no,new_solution_dic] = generate_solution(solution_size,main_cars,ramp_cars,merging_position)
+        
+        #check feasibility
+        if (not check_feasibility(new_solution_dic,min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp)):
+            continue
 
-    #generate new solution
-    [distances_to_merge, cars_ramp_merged_no,new_solution_dic] = generate_solution(solution_size,main_cars,ramp_cars,merging_position)
-    
-    #check feasibility
-    if (not check_feasibility(new_solution_dic,min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp)):
-        continue
-
-    
-    #SA for one iteration (if it is better take it if not get temprature and do the other stuff )
-    [curr_solution, curr_objective,best_solution,best_objective, curr_temperature] = Simulated_annealing.simulated_annealing(iteration_index, curr_solution, curr_objective,best_solution,best_objective,
-                                        initial_temperature,curr_temperature, cooling_rate,linear,num_iterations,
-                                        min_v_main,max_v_main,
-                                        weight_func_1, cars_ramp_num,cars_ramp_merged_no, new_solution_dic, distances_to_merge)  
-    
-
-    SA_temprature_List.append(curr_temperature)
-    SA_obj_func_List.append(curr_objective)
-    
-    print("Accepted Sequence is: ", [0 if car.name>=chr(97) else 1 for car in curr_solution.values()] )
-    print("current objective:", curr_objective)
+        
+        #SA for one iteration (if it is better take it if not get temprature and do the other stuff )
+        [curr_solution, curr_objective,best_solution,best_objective, curr_temperature] = Simulated_annealing.simulated_annealing(iteration_index, curr_solution, curr_objective,best_solution,best_objective,
+                                            initial_temperature,curr_temperature, cooling_rate,linear,
+                                            min_v_main,max_v_main,
+                                            weight_func_1, cars_ramp_num,cars_ramp_merged_no, new_solution_dic, distances_to_merge)  
+        
+        SA_temprature_List.append(curr_temperature)
+        SA_obj_func_List.append(curr_objective)
+        
+        print("Accepted Sequence is: ", [0 if car.name>=chr(97) else 1 for car in curr_solution.values()] )
+        print("current objective:", curr_objective)
 
     iteration_index += 1
 
