@@ -88,11 +88,12 @@ def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_
 
 
 #SA Example usage
-initial_temperature = 1000
-cooling_rate = 30
-num_iterations = 1000
+initial_temperature = 500
+curr_temperature = initial_temperature
+cooling_rate = 3
+num_iterations = 1 #for each temp
 final_temperature = 0.05
-weight_func_1 = 0.3
+weight_func_1 = 0.7
 linear = True
 curr_solution = None
 curr_objective = 0
@@ -107,7 +108,7 @@ SA_obj_func_List = []
 
 iteration_index = -1
 #SA Loop
-for _ in range(num_iterations):
+while(curr_temperature > final_temperature):
     #return cars to initial conditions
     for car in main_cars.values():
         car.return_to_initial_conditions()
@@ -124,7 +125,7 @@ for _ in range(num_iterations):
     iteration_index += 1
     #SA for one iteration (if it is better take it if not get temprature and do the other stuff )
     [curr_solution, curr_objective, curr_temperature] = Simulated_annealing.simulated_annealing(iteration_index, curr_solution, curr_objective,
-                                        initial_temperature,final_temperature, cooling_rate,linear,
+                                        initial_temperature,curr_temperature, cooling_rate,linear,
                                         min_v_main,max_v_main,
                                         weight_func_1, cars_ramp_num,cars_ramp_merged_no, new_solution_dic, distances_to_merge)  
      
@@ -132,9 +133,6 @@ for _ in range(num_iterations):
         best_solution = curr_solution
         best_objective = curr_objective
    
-    if (curr_temperature <= final_temperature):
-        break
-
     SA_temprature_List.append(curr_temperature)
     SA_obj_func_List.append(curr_objective)
     
@@ -147,6 +145,7 @@ print("Best objective:", best_objective)
 
 plt.plot(SA_temprature_List,SA_obj_func_List)
 # Add labels and a legend
+plt.ylim(0, 1)
 plt.xlabel('temprature')
 plt.ylabel('obective function value')
 plt.title('Simulated annealing')
