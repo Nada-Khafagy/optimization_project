@@ -1,4 +1,4 @@
-import random
+import numpy as np
 import objective_func
 import math
 import matplotlib.pyplot as plt
@@ -20,14 +20,15 @@ def simulated_annealing(iteration_index,current_solution,current_objective,
             current_objective = new_objective
         else :
             #p 
-            k = 30 # multiply by delta objective to make probability change greater 
-            acceptance_prob = (math.e)** (((delta_objective)) / curr_temperature )
+            k = 1 # multiply by delta objective to make probability change greater 
+            acceptance_prob = (math.e)** (((k*delta_objective)) / curr_temperature )
             print("probability is ",acceptance_prob)
-            
-            if acceptance_prob > random.randint(0,1):
+            r =  np.random.rand()
+            print("r is",r)
+            if acceptance_prob > r:
                 current_solution = new_solution_dic
                 current_objective = new_objective    
-    
+    #apply cooling schedule
     if linear :          
         curr_temperature = initial_temperature - cooling_rate*iteration_index
     else :
