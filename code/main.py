@@ -90,10 +90,11 @@ def check_feasibility(current_solution, min_v_ramp, max_v_ramp, min_a_ramp, max_
 #SA Example usage
 initial_temperature = 500
 curr_temperature = initial_temperature
-cooling_rate = 3
-num_iterations = 1 #for each temp
-iteration_index = -1
 final_temperature = 0.05
+num_iterations = 1 #for each temp
+iteration_index = 0
+maximum_steps_num = 1000
+cooling_rate = (final_temperature-initial_temperature) / maximum_steps_num
 weight_func_1 = 0.7
 linear = True
 curr_solution = None
@@ -109,7 +110,7 @@ SA_obj_func_List = []
 
 
 #SA Loop
-while(curr_temperature > final_temperature):
+while(curr_temperature > final_temperature) and (iteration_index<maximum_steps_num):
 
     #return cars to initial conditions
     for car in main_cars.values():
@@ -124,7 +125,7 @@ while(curr_temperature > final_temperature):
     if (not check_feasibility(new_solution_dic,min_v_ramp, max_v_ramp, min_a_ramp, max_a_ramp)):
         continue
 
-    iteration_index += 1
+    
     #SA for one iteration (if it is better take it if not get temprature and do the other stuff )
     [curr_solution, curr_objective, curr_temperature] = Simulated_annealing.simulated_annealing(iteration_index, curr_solution, curr_objective,
                                         initial_temperature,curr_temperature, cooling_rate,linear,num_iterations,
@@ -140,6 +141,8 @@ while(curr_temperature > final_temperature):
     
     print("Accepted Sequence is: ", [0 if car.name>=chr(97) else 1 for car in curr_solution.values()] )
     print("current objective:", curr_objective)
+    
+    iteration_index += 1
 
 print("Best solution:", [0 if car.name>=chr(97) else 1 for car in best_solution.values()])
 print("Best objective:", best_objective)
