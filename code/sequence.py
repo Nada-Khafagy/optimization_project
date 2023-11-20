@@ -39,6 +39,8 @@ def get_distance_to_merge_list(vehicle_objects_sequence, cc_parameters):
 
 #check constraints
 def check_feasibility(vehicle_objects_sequence, road, cc_parameters):
+    for car in vehicle_objects_sequence :
+         car.return_to_initial_conditions()
     feasibility = True
     while(vehicle_objects_sequence[-1].position < cc_parameters.merging_position ): 
         #move all cars for one time sample 

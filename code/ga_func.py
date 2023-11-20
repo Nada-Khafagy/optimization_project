@@ -30,11 +30,20 @@ def initialize_population(population_size, solution_size, ramp_cars_num, main_ca
 #For each solution, it calls randomize_sequence to create a random arrangement of main cars and ramp cars.
 def crossover(parent1, parent2):
     # Implement crossover logic to generate offspring from parents
+    parent1_letters = get_sequence_in_letters_from_cars(parent1)
+    parent2_letters = get_sequence_in_letters_from_cars(parent2)
+    parent1_binary = turn_letters_to_binary(parent1_letters)
+    parent2_binary = turn_letters_to_binary(parent2_letters)
     crossover_point = np.random.randint(1, len(parent1) - 1)
-    child1 = (parent1)
-    child1[crossover_point:]=((parent2)[crossover_point:])
-    child2 = (parent2)
-    child2[crossover_point:]=((parent1)[crossover_point:])
+    child1_binary = (parent1_binary)
+    child1_binary[crossover_point:]=((parent2_binary)[crossover_point:])
+    child2_binary = (parent2_binary)
+    child2_binary[crossover_point:]=((parent1_binary)[crossover_point:])
+    child1_letters = turn_binary_to_letters(child1_binary)
+    child2_letters = turn_binary_to_letters(child2_binary)
+    child1 = get_car_object_list_from_sequence(child1_letters)
+    child2 = get_car_object_list_from_sequence(child2_letters)
+
     return child1,child2
  
 # The crossover function takes two parent solutions (parent1 and parent2) 
