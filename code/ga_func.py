@@ -9,10 +9,11 @@ from sequence import get_distance_to_merge_list
 from sequence import check_feasibility
 from sequence import turn_binary_to_letters
 from sequence import turn_letters_to_binary
-from sequence import get_sequence_in_letters_from_cars
+from sequence import turn_car_objects_to_letters
+from sequence import turn_car_objects_to_binary
 
 
-def initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,road, cc_parameters , weight_func_1):
+def initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,road, cc_parameters, weight_func_1):
     population = []
     fitness_list = []
 
@@ -27,25 +28,26 @@ def initialize_population(population_size, solution_size, main_cars_list, ramp_c
         #append fitness list 
         curr_sol_fitness = fitness(weight_func_1, len(ramp_cars_list),cars_ramp_merged_num,solution_obj,distances_to_merge_list, road)
         fitness_list.append(curr_sol_fitness)
-
     return population, cars_ramp_merged_num, distances_to_merge_list, fitness_list
 
+# The crossover function takes two parent solutions (parent1 and parent2) 
+#and performs crossover to create a child solution. It randomly selects a crossover point and combines
+# the information from both parents to create the child solution.
 
-def crossover(parent1, parent2):
+def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
     # Implement crossover logic to generate offspring from parents
-    parent1_letters = get_sequence_in_letters_from_cars(parent1)
-    parent2_letters = get_sequence_in_letters_from_cars(parent2)
-    parent1_binary = turn_letters_to_binary(parent1_letters)
-    parent2_binary = turn_letters_to_binary(parent2_letters)
+    parent1_binary = turn_car_objects_to_binary(parent1)
+    parent2_binary = turn_car_objects_to_binary(parent2)
     crossover_point = np.random.randint(1, len(parent1) - 1)
     child1_binary = (parent1_binary)
     child1_binary[crossover_point:]=((parent2_binary)[crossover_point:])
     child2_binary = (parent2_binary)
     child2_binary[crossover_point:]=((parent1_binary)[crossover_point:])
+
     child1_letters = turn_binary_to_letters(child1_binary)
     child2_letters = turn_binary_to_letters(child2_binary)
-    child1 = get_car_object_list_from_sequence(child1_letters)
-    child2 = get_car_object_list_from_sequence(child2_letters)
+    child1 = get_car_object_list_from_sequence(child1_letters, main_cars_list, ramp_cars_list, cc_parameters)
+    child2 = get_car_object_list_from_sequence(child2_letters, main_cars_list, ramp_cars_list, cc_parameters)
 
     return child1,child2
  
@@ -54,12 +56,13 @@ def crossover(parent1, parent2):
 # the information from both parents to create the child solution.
 
 def mutate(bad_sol,n):
-
+    bad_sol_binary =turn_car_objects_to_binary(bad_sol)
     random_indices = random.sample(range(len(bad_sol)), n)
     # Flip the values at the randomly selected indices
     for index in random_indices:
-        bad_sol[index] = 1-bad_sol[index]  # Assuming the list contains boolean values, this flips them
-
+        bad_sol_binary[index] = 1-bad_sol_binary[index]  
+    bad_sol_letters =turn_binary_to_letters(bad_sol_binary)
+    bad_sol =get_car_object_list_from_sequence(bad_sol_letters)
     return bad_sol
 
 ### 
@@ -71,7 +74,7 @@ def select_parents(parents_num,population,weight_func_1, cars_ramp_no,cars_ramp_
     total_fitness = sum(fitness_values)
     probabilities = [fitness / total_fitness for fitness in fitness_values]
     parents=[]
-    while len(parents) <  (parents_num):
+    while (len(parents)<parents_num):
         parent = random.choices(population, probabilities)[0]
         if(not(parent in parents)):
             parents.append(parent)

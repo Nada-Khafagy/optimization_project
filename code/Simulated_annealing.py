@@ -73,7 +73,7 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
 
             iteration_index += 1
                  
-            print("Accepted Sequence is: ", sequence.get_sequence_in_letters_from_cars(current_solution))
+            print("Accepted Sequence is: ", sequence.turn_car_objects_to_letters(current_solution))
             print("current fitness:", current_fitness)
           
     return best_solution, best_fitness, SA_temprature_List, SA_fitness_List

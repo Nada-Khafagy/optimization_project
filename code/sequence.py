@@ -71,8 +71,12 @@ def turn_letters_to_binary(letters_sequence):
     binary_sequence = [0 if letter >= chr(97) else 1 for letter in letters_sequence]
     return binary_sequence
 
-def get_sequence_in_letters_from_cars(sequence):
+def turn_car_objects_to_letters(sequence):
     letters_sequence = []
     for car in sequence:
         letters_sequence.append(car.name)
     return letters_sequence
+
+def turn_car_objects_to_binary(sequence):
+    binary_sequence = [0 if car.name >= chr(97) else 1 for car in sequence]
+    return binary_sequence
