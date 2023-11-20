@@ -31,6 +31,7 @@ def get_car_object_list_from_sequence(sequence, main_cars_list, ramp_cars_list, 
     distances_to_merge_list = get_distance_to_merge_list(vehicle_objects_sequence,cc_parameters)
     return  vehicle_objects_sequence, distances_to_merge_list
 
+
 def get_distance_to_merge_list(vehicle_objects_sequence, cc_parameters):
     distances_to_merge_list = []
     for car in vehicle_objects_sequence:    

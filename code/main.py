@@ -78,6 +78,19 @@ weight_func_1 = 0.7
 [best_solution,best_objective, SA_temprature_List, SA_obj_func_List] = Simulated_annealing.simulated_annealing(initial_temperature,
 final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
  highway, cc_parameters)  
+#return cars to initial conditions
+
+for car in list(main_cars_list+ramp_cars_list):
+    car.return_to_initial_conditions()
+
+print("Best solution:", sequence.turn_letters_to_binary(sequence.get_sequence_in_letters_from_cars(best_solution)))
+print("Best objective:", best_objective)
+
+plot_SA(SA_temprature_List,SA_obj_func_List)
+  
+#changed function parameters, check file before uncommenting
+Simulation.visualization(main_cars_list,ramp_cars_list,best_solution,cc_parameters)
+#print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
 
 # Genetic Algorithm Example usage
 population_size = 50
@@ -90,18 +103,5 @@ best_solution, best_objective, best_objective_list = genetic_algorithm(populatio
             mutation_rate, min_v_main, max_v_main, weight_func_1, ramp_cars_num, main_cars_list, ramp_cars_list)
 
               
-#return cars to initial conditions
-for car in list(main_cars_list+ramp_cars_list) :
-    car.return_to_initial_conditions()
-
-print("Best solution:", sequence.turn_letters_to_binary(sequence.get_sequence_in_letters_from_cars(best_solution)))
-print("Best objective:", best_objective)
-
-plot_SA(SA_temprature_List,SA_obj_func_List)
-    
-#changed function parameters, check file before uncommenting
-Simulation.visualization(main_cars_list,ramp_cars_list,best_solution,cc_parameters)
-#print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
-
 
 

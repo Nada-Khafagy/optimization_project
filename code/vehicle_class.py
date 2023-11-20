@@ -51,7 +51,7 @@ class Vehicle:
 
         if (min_v >= self.velocity) or (self.velocity >= max_v):
             return False
-        if (min_a >= self.acceleration) or (self.acceleration>= max_a) :
+        if (min_a >= self.acceleration) or (self.acceleration >= max_a) :
             return False
         return True
     

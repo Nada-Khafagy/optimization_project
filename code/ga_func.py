@@ -1,9 +1,8 @@
-import copy
-import numpy as np
 import numpy as np
 import objective_func
 import copy
 import random
+from objective_func import fitness
 from sequence import randomize_sequence
 from sequence import get_car_object_list_from_sequence
 from sequence import get_distance_to_merge_list
@@ -13,21 +12,29 @@ from sequence import turn_letters_to_binary
 from sequence import get_sequence_in_letters_from_cars
 
 
-def initialize_population(population_size, solution_size, ramp_cars_num, main_cars_list, ramp_cars_list, cc_parameters):
+def initialize_population(population_size, solution_size, ramp_cars_num, main_cars_list, ramp_cars_list,road, cc_parameters , weight_func_1):
     population = []
+    fitness_list = []
+
     while (len(population) < population_size):
         # Generate a random solution
-        [distances_to_merge,cars_ramp_merged_no, solution] = randomize_sequence(solution_size, ramp_cars_num)
+        [solution, cars_ramp_merged_num] = randomize_sequence(solution_size, ramp_cars_num)
+        [solution_obj, distances_to_merge_list] = get_car_object_list_from_sequence(solution, main_cars_list, ramp_cars_list, cc_parameters)
         
-        if check_feasibility(solution) == True : 
-            population.append(list(solution.values()))
-            print("in the iteration", solution.keys())
+        if check_feasibility(solution_obj,road,cc_parameters) == True : 
+            population.append(solution_obj)
+            #print("in the iteration", get_sequence_in_letters_from_cars(solution_obj))
+        #append fitness list 
+        curr_sol_fitness = fitness(weight_func_1, len(ramp_cars_list),cars_ramp_merged_num,solution_obj,distances_to_merge_list, road)
+        fitness_list.append(curr_sol_fitness)
 
-    return population, cars_ramp_merged_no, distances_to_merge
+        #return car objects to their initial condition before getting a new solution
+        for car in solution_obj:
+            car.return_to_initial_conditions()
 
-# This function initializes the population for the Genetic Algorithm.
-#  It creates a list called population that will contain several solutions.
-#For each solution, it calls randomize_sequence to create a random arrangement of main cars and ramp cars.
+    return population, cars_ramp_merged_num, distances_to_merge_list, fitness_list
+
+
 def crossover(parent1, parent2):
     # Implement crossover logic to generate offspring from parents
     crossover_point = np.random.randint(1, len(parent1) - 1)
@@ -35,6 +42,7 @@ def crossover(parent1, parent2):
     child1[crossover_point:]=((parent2)[crossover_point:])
     child2 = (parent2)
     child2[crossover_point:]=((parent1)[crossover_point:])
+
     return child1,child2
  
 # The crossover function takes two parent solutions (parent1 and parent2) 
@@ -42,6 +50,7 @@ def crossover(parent1, parent2):
 # the information from both parents to create the child solution.
 
 def mutate(bad_cars):
+
     # Implement mutation logic to perturb the solution
     for sol in bad_cars:
         mutate_point1 = random.randint(0,len(sol)-1)

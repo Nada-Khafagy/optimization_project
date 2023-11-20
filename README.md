@@ -35,6 +35,10 @@ enjoy looking at the vehicles of the main line on the map :)
 - make visualzation start from zero and sraet platooning from decsision point 
 - choose what to do if no main line cars in solution (reject?)
 
+## problems with GA
+- checking feasability in cross over and mutation
+- you shoud swap the binary list and not the letters list
+
 ## code of conduct 
 - please don't use 'i' or 'j' or one letter as names for variables
 - function names should be verbs and as descriptive as possible
