@@ -53,15 +53,14 @@ def crossover(parent1, parent2):
 #and performs crossover to create a child solution. It randomly selects a crossover point and combines
 # the information from both parents to create the child solution.
 
-def mutate(bad_cars):
+def mutate(bad_sol,n):
 
-    # Implement mutation logic to perturb the solution
-    for sol in bad_cars:
-        mutate_point1 = random.randint(0,len(sol)-1)
-        mutate_point2 = random.randint(0,len(sol)-1)
-        temp = sol[mutate_point2]
-        sol[mutate_point2] = sol[mutate_point1]
-        sol[mutate_point1]=temp
+    random_indices = random.sample(range(len(bad_sol)), n)
+    # Flip the values at the randomly selected indices
+    for index in random_indices:
+        bad_sol[index] = 1-bad_sol[index]  # Assuming the list contains boolean values, this flips them
+
+    return bad_sol
 
 ### 
 # The mutate function introduces random changes (mutations) to the solution. It randomly selects two cars and swaps their positions with a probability defined by the mutation_rate.

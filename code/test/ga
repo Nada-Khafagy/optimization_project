@@ -1,0 +1,12 @@
+import random
+def mutate(bad_sol,n):
+
+    random_indices = random.sample(range(len(bad_sol)), n)
+    # Flip the values at the randomly selected indices
+    for index in random_indices:
+        bad_sol[index] = 1-bad_sol[index]  # Assuming the list contains boolean values, this flips them
+
+    return bad_sol
+sol = [1,0,0,0,1,0]
+mutate(sol,4)
+print(sol)
