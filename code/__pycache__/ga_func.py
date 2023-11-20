@@ -9,8 +9,7 @@ from sequence import get_distance_to_merge_list
 from sequence import check_feasibility
 from sequence import turn_binary_to_letters
 from sequence import turn_letters_to_binary
-from sequence import turn_car_objects_to_letters
-from sequence import turn_car_objects_to_binary
+from sequence import get_sequence_in_letters_from_cars
 
 
 def initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,road, cc_parameters, weight_func_1):
@@ -34,14 +33,15 @@ def initialize_population(population_size, solution_size, main_cars_list, ramp_c
 
 def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
     # Implement crossover logic to generate offspring from parents
-    parent1_binary = turn_car_objects_to_binary(parent1)
-    parent2_binary = turn_car_objects_to_binary(parent2)
+    parent1_letters = get_sequence_in_letters_from_cars(parent1)
+    parent2_letters = get_sequence_in_letters_from_cars(parent2)
+    parent1_binary = turn_letters_to_binary(parent1_letters)
+    parent2_binary = turn_letters_to_binary(parent2_letters)
     crossover_point = np.random.randint(1, len(parent1) - 1)
     child1_binary = (parent1_binary)
     child1_binary[crossover_point:]=((parent2_binary)[crossover_point:])
     child2_binary = (parent2_binary)
     child2_binary[crossover_point:]=((parent1_binary)[crossover_point:])
-    
     child1_letters = turn_binary_to_letters(child1_binary)
     child2_letters = turn_binary_to_letters(child2_binary)
     child1 = get_car_object_list_from_sequence(child1_letters, main_cars_list, ramp_cars_list, cc_parameters)

@@ -1,10 +1,7 @@
 import numpy as np
 import objective_func
-import copy
-import random
 import matplotlib.pyplot as plt
 import ga_func
-import sequence
 
 
 
