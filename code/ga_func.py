@@ -12,13 +12,13 @@ from sequence import turn_letters_to_binary
 from sequence import get_sequence_in_letters_from_cars
 
 
-def initialize_population(population_size, solution_size, ramp_cars_num, main_cars_list, ramp_cars_list,road, cc_parameters , weight_func_1):
+def initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,road, cc_parameters , weight_func_1):
     population = []
     fitness_list = []
 
     while (len(population) < population_size):
         # Generate a random solution
-        [solution, cars_ramp_merged_num] = randomize_sequence(solution_size, ramp_cars_num)
+        [solution, cars_ramp_merged_num] = randomize_sequence(solution_size, len(ramp_cars_list))
         [solution_obj, distances_to_merge_list] = get_car_object_list_from_sequence(solution, main_cars_list, ramp_cars_list, cc_parameters)
         
         if check_feasibility(solution_obj,road,cc_parameters) == True : 
@@ -27,10 +27,6 @@ def initialize_population(population_size, solution_size, ramp_cars_num, main_ca
         #append fitness list 
         curr_sol_fitness = fitness(weight_func_1, len(ramp_cars_list),cars_ramp_merged_num,solution_obj,distances_to_merge_list, road)
         fitness_list.append(curr_sol_fitness)
-
-        #return car objects to their initial condition before getting a new solution
-        for car in solution_obj:
-            car.return_to_initial_conditions()
 
     return population, cars_ramp_merged_num, distances_to_merge_list, fitness_list
 
