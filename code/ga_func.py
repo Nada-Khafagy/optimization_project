@@ -28,9 +28,11 @@ def initialize_population(population_size, solution_size, main_cars_list, ramp_c
         #append fitness list 
         curr_sol_fitness = fitness(weight_func_1, len(ramp_cars_list),cars_ramp_merged_num,solution_obj,distances_to_merge_list, road)
         fitness_list.append(curr_sol_fitness)
-
     return population, cars_ramp_merged_num, distances_to_merge_list, fitness_list
 
+# The crossover function takes two parent solutions (parent1 and parent2) 
+#and performs crossover to create a child solution. It randomly selects a crossover point and combines
+# the information from both parents to create the child solution.
 
 def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
     # Implement crossover logic to generate offspring from parents
@@ -41,7 +43,7 @@ def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
     child1_binary[crossover_point:]=((parent2_binary)[crossover_point:])
     child2_binary = (parent2_binary)
     child2_binary[crossover_point:]=((parent1_binary)[crossover_point:])
-    
+
     child1_letters = turn_binary_to_letters(child1_binary)
     child2_letters = turn_binary_to_letters(child2_binary)
     child1 = get_car_object_list_from_sequence(child1_letters, main_cars_list, ramp_cars_list, cc_parameters)
@@ -49,12 +51,7 @@ def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
 
     return child1,child2
  
-# The crossover function takes two parent solutions (parent1 and parent2) 
-#and performs crossover to create a child solution. It randomly selects a crossover point and combines
-# the information from both parents to create the child solution.
-
 def mutate(bad_cars):
-
     # Implement mutation logic to perturb the solution
     for sol in bad_cars:
         mutate_point1 = random.randint(0,len(sol)-1)
@@ -72,7 +69,7 @@ def select_parents(parents_num,population,weight_func_1, cars_ramp_no,cars_ramp_
     total_fitness = sum(fitness_values)
     probabilities = [fitness / total_fitness for fitness in fitness_values]
     parents=[]
-    while len(parents) <  (parents_num):
+    while (len(parents)<parents_num):
         parent = random.choices(population, probabilities)[0]
         if(not(parent in parents)):
             parents.append(parent)
