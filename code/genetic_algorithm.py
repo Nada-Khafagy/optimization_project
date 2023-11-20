@@ -65,19 +65,4 @@ def genetic_algorithm(main_cars, ramp_cars,population_size, generations,elitism_
     return best_solution, best_objective
 
 
-### The genetic_algorithm function orchestrates the entire Genetic Algorithm. It iterates through generations, evaluates the fitness of each solution, selects parents, performs crossover and mutation to generate offspring, and updates the population. The best solution found during the iterations is returned.
-
-import copy
-import numpy as np
-import numpy as np
-import objective_func
-import copy
-import random
-from sequence import randomize_sequence
-from sequence import get_car_object_list_from_sequence
-from sequence import get_distance_to_merge_list
-from sequence import check_feasibility
-from sequence import turn_binary_to_letters
-from sequence import turn_letters_to_binary
-from sequence import get_sequence_in_letters_from_cars
-
+### The genetic_algorithm function orchestrates the entire Genetic Algorithm. It iterates through generations, evaluates the fitness of each solution, selects parents, performs crossover and mutation to generate offspring, and updates the population. The best solution found during the iterations is returned
