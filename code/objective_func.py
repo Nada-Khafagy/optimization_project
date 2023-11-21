@@ -1,4 +1,15 @@
-def fitness(w1, ramp_cars_total_num, obj_sequence, distances_to_merge, road):
+import sequence
+def fitness(w1, ramp_cars_total_num, obj_sequence, cc_paramters, road):
+    #just to make sure everything is correct
+    for car in obj_sequence:
+        car.return_to_initial_conditions()
+
+    distances_to_merge = sequence.get_distance_to_merge_list(obj_sequence, cc_paramters)
+    
+    if not sequence.check_feasibility( obj_sequence, road, cc_paramters):
+        return -1
+
+
     ramp_cars_used=0
     for car in obj_sequence:
         if car.name >= chr(97):

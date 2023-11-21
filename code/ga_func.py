@@ -8,26 +8,29 @@ import sequence
 
 def initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,road, cc_parameters, weight_func_1):
     population = []
-    initial_fitness_list = []
 
     while (len(population) < population_size):
         # Generate a random solution
-        [solution, cars_ramp_merged_num] = sequence.randomize_sequence(solution_size, len(ramp_cars_list))
-        [solution_obj, distances_to_merge_list] = sequence.get_car_object_list_from_sequence(solution, main_cars_list, ramp_cars_list, cc_parameters)  
-        #make sure it is feasibile    
+        solution = sequence.randomize_sequence(solution_size, len(ramp_cars_list))
+        #print(solution)
+        solution_obj = sequence.get_car_object_list_from_sequence(solution, main_cars_list,
+                                                                                              ramp_cars_list, cc_parameters)  
+         #make sure it is feasibile   
         if sequence.check_feasibility(solution_obj,road,cc_parameters) == True : 
             population.append(solution_obj)
+            #print("solution accepted")
             #print("in the iteration", get_sequence_in_letters_from_cars(solution_obj))
 
-    initial_fitness_list = calc_fitness_list(population, weight_func_1, ramp_cars_list, cc_parameters, road)
-    return population, initial_fitness_list
+
+    return population
 
 def calc_fitness_list(population, weight_func_1, ramp_cars_list, cc_parameters, road):
     fitness_list = []
     for individual in population:
-        distances_to_merge_list = sequence.get_distance_to_merge_list(individual,cc_parameters)
-        curr_individual_fitness = fitness(weight_func_1, len(ramp_cars_list), individual,distances_to_merge_list, road)
+        #print("individial", individual)
+        curr_individual_fitness = fitness(weight_func_1, len(ramp_cars_list), individual, cc_parameters, road)
         fitness_list.append(curr_individual_fitness)
+    return fitness_list
 
 
 # The crossover function takes two parent solutions (parent1 and parent2) 
@@ -68,16 +71,29 @@ def mutate(bad_sol,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parame
 # The select_parents function is responsible for selecting two parent solutions based on their fitness.
 # It uses a random tournament selection mechanism to choose parents with higher fitness values.
 def select_parents(parents_num, population, fitness_list):
+    #Roulette Wheel Selection
     total_fitness = sum(fitness_list)
     probabilities = [fitness / total_fitness for fitness in fitness_list]
-    parents=[]
-    while (len(parents)<parents_num):
+    parents = []
+
+    while (len(parents) < parents_num):
         parent = random.choices(population, probabilities)[0]
         if(not(parent in parents)):
             parents.append(parent)
     #while parent2 == parent1:
     #    parent2 = random.choices(population, probabilities)[0]
     #    print("parent1 and parent 2 is",parent1, parent2)
+    '''for _ in range(parents_num):
+        probabilities = [fitness / total_fitness for fitness in fitness_list]     
+        # Use random.choices to select an individual based on probabilities
+        parent = random.choices(population, probabilities)[0]      
+        # Append the selected parent to the list
+        parents.append(parent)      
+        # Remove the selected parent from the population
+        population.remove(parent)       
+        # Recalculate total_fitness for the updated population
+        total_fitness = sum(fitness_list)'''
+    
     return parents
 
 

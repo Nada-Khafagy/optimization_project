@@ -17,21 +17,18 @@ def randomize_sequence(sequence_size, ramp_cars_max_num):
 
 def get_car_object_list_from_sequence(sequence, main_cars_list, ramp_cars_list, cc_parameters):
     #assume solution 
-    #[car_sequence,ramp_cars_merged_num] = randomize_sequence(merged_sequence_size,ramp_cars_num)
     binary_sequece = turn_letters_to_binary(sequence)
     vehicle_objects_sequence = list()
     main_cars_queue = deque(main_cars_list)
     ramp_cars_queue = deque(ramp_cars_list)
-
     for car_name in binary_sequece: 
         if car_name == 1:
             vehicle_objects_sequence.append(main_cars_queue.popleft())           
         else:
             vehicle_objects_sequence.append(ramp_cars_queue.popleft()) 
-    distances_to_merge_list = get_distance_to_merge_list(vehicle_objects_sequence,cc_parameters)
-    return  vehicle_objects_sequence, distances_to_merge_list
+    return  vehicle_objects_sequence
 
-
+#works only before crusie control, which is called in check feasability so works only before feasability check
 def get_distance_to_merge_list(vehicle_objects_sequence, cc_parameters):
     distances_to_merge_list = []
     for car in vehicle_objects_sequence:    

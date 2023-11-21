@@ -7,7 +7,7 @@ import Simulation
 import random
 import sequence 
 from plot import plot_SA
-import genetic_algorithm
+from genetic_algorithm import genetic_algorithm
 
 #constraints
 min_v_main = 10 * (5/18) #m/s 2.777 
@@ -36,8 +36,8 @@ ramp_cars_num = random.randint(5,10) ##number of ramp cars generated
 solution_size = random.randint(min(main_cars_num,ramp_cars_num), main_cars_num) #maximum size for the optimization algorithm
 #for testing SA with same scenario - delete later
 main_cars_num = 10
-ramp_cars_num = 5 
-solution_size = 10
+ramp_cars_num = 10
+solution_size = min(main_cars_num,ramp_cars_num)
 #main cars intial parameters
 intial_main_position = decision_position - random.randint(10, 30)
 initial_main_velocity = 60  * 5/18  #m/s
@@ -75,6 +75,7 @@ linear = True
 weight_func_1 = 0.7
 plot_best = False
 
+'''
 #SA 
 [best_solution,best_objective, SA_temprature_List, SA_fitness_List] = Simulated_annealing.simulated_annealing(initial_temperature,
 final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
@@ -89,19 +90,16 @@ plot_SA(SA_temprature_List,SA_fitness_List)
 #changed function parameters, check file before uncommenting
 Simulation.visualization(main_cars_list,ramp_cars_list,best_solution,cc_parameters)
 #print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
+
 '''
+
 # Genetic Algorithm Example usage
-population_size = 50
+population_size = 10
 generation_size = 100
-crossover_rate = 0.8
-mutation_rate = 0.1
+crossover_ratio = 0.8
+mutation_ratio = 0.1
 #elitism_rate = 1 - mutation_rate - crossover_rate
 weight_func_1 = 0.7
-
-best_solution, best_objective, best_objective_list = genetic_algorithm(population_size, generation_size, crossover_rate,mutation_rate,
-                                                                       main_cars_list, ramp_cars_list, solution_size,  weight_func_1,
-                                                                       highway,cc_parameters)
-'''
-              
-
+best_solution, best_objective = genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
+        main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
 

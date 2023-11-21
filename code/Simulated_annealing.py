@@ -25,7 +25,7 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
             #generate new solution
             new_solution = sequence.randomize_sequence(solution_size, len(ramp_cars_list))  
             #get objects from the randomized list
-            [new_solution_obj, distances_to_merge_list] = sequence.get_car_object_list_from_sequence(new_solution, main_cars_list, ramp_cars_list, cc_parameters)
+            new_solution_obj = sequence.get_car_object_list_from_sequence(new_solution, main_cars_list, ramp_cars_list, cc_parameters)
             #check feasibility
             if (not sequence.check_feasibility(new_solution_obj, road, cc_parameters)):
                 #don't count this iteration and get another solution
@@ -33,7 +33,7 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
             #get the list of distances, which is needed when getting the fitness
 
             #fn+1
-            new_fitness = fitness(weight_func_1, len(ramp_cars_list),new_solution_obj,distances_to_merge_list, road)
+            new_fitness = fitness(weight_func_1, len(ramp_cars_list),new_solution_obj, cc_parameters, road)
             #delta f
             delta_fitness = new_fitness - current_fitness
             if delta_fitness >= 0: #we are maximizing so if it is positive, it is a good thing
