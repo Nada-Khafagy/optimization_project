@@ -8,6 +8,7 @@ def plot_SA(x,y):
     plt.title('Simulated annealing')
     plt.gca().invert_xaxis()
     # Show the plot (or you can save it to a file with plt.savefig)
+    plt.grid(True)
     plt.show()
 
 def plot_GA(x,y):      
@@ -18,5 +19,5 @@ def plot_GA(x,y):
     plt.ylabel('Best individual in this generation')
     plt.title('Genetic Algorithm')
     plt.gca().invert_xaxis()
-    # Show the plot (or you can save it to a file with plt.savefig)
+    plt.grid(True)
     plt.show()
