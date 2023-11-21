@@ -7,6 +7,7 @@ import Simulation
 import random
 import sequence 
 from plot import plot_SA
+from plot import plot_GA
 from genetic_algorithm import genetic_algorithm
 
 #constraints
@@ -100,6 +101,7 @@ crossover_ratio = 0.8
 mutation_ratio = 0.1
 #elitism_rate = 1 - mutation_rate - crossover_rate
 weight_func_1 = 0.7
-best_solution, best_objective = genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
+[GA_generation_num,GA_best_sol_in_generation, best_solution, best_objective] = genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
         main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
 
+plot_GA(GA_generation_num,GA_best_sol_in_generation)

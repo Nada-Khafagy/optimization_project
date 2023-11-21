@@ -25,6 +25,7 @@ enjoy looking at the vehicles of the main line on the map :)
 - randomize a sequence of letters or binary
 - get car objects for this list
 - check feasability in which we cruise control 
+- get objective function
 - return to initial conditions
 
 ## To do list
@@ -34,11 +35,7 @@ enjoy looking at the vehicles of the main line on the map :)
 - check for collision
 - make visualzation start from zero and sraet platooning from decsision point 
 - choose what to do if no main line cars in solution (reject?)
-- remove r merged and make it calculated in objective function
 
-## problems with GA
-- checking feasability in cross over and mutation
-- you shoud swap the binary list and not the letters list
 
 ## code of conduct 
 - please don't use 'i' or 'j' or one letter as names for variables

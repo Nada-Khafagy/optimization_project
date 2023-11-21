@@ -71,29 +71,32 @@ def mutate(bad_sol,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parame
 
 # The select_parents function is responsible for selecting two parent solutions based on their fitness.
 # It uses a random tournament selection mechanism to choose parents with higher fitness values.
-def select_parents(parents_num, population, fitness_list):
+def select_parents(parents_num, population,fitness_list ):
     #Roulette Wheel Selection
-    total_fitness = sum(fitness_list)
+    fitness_list_copy = list(fitness_list)
+    total_fitness = sum(fitness_list_copy)
     probabilities = [fitness / total_fitness for fitness in fitness_list]
     parents = []
-
-    while (len(parents) < parents_num):
-        parent = random.choices(population, probabilities)[0]
-        if(not(parent in parents)):
-            parents.append(parent)
+    #while (len(parents) < parents_num):
+    #    parent = random.choices(population, probabilities)[0]
+    #    if(not(parent in parents)):
+    #        parents.append(parent)
     #while parent2 == parent1:
     #    parent2 = random.choices(population, probabilities)[0]
     #    print("parent1 and parent 2 is",parent1, parent2)
-    '''for _ in range(parents_num):
-        probabilities = [fitness / total_fitness for fitness in fitness_list]     
+    for _ in range(parents_num):
+
+        probabilities = [fitness / total_fitness for fitness in fitness_list_copy]     
         # Use random.choices to select an individual based on probabilities
         parent = random.choices(population, probabilities)[0]      
         # Append the selected parent to the list
         parents.append(parent)      
         # Remove the selected parent from the population
-        population.remove(parent)       
+        index_to_remove = population.index(parent)
+        population.remove(parent)
+        fitness_list_copy.remove(fitness_list_copy[index_to_remove])
         # Recalculate total_fitness for the updated population
-        total_fitness = sum(fitness_list)'''
+        total_fitness = sum(fitness_list_copy)
     
     return parents
 

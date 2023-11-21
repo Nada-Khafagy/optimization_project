@@ -9,3 +9,14 @@ def plot_SA(x,y):
     plt.gca().invert_xaxis()
     # Show the plot (or you can save it to a file with plt.savefig)
     plt.show()
+
+def plot_GA(x,y):      
+    plt.plot(x,y)
+    # Add labels and a legend
+    plt.ylim(0, 1)
+    plt.xlabel('generation number')
+    plt.ylabel('obective function value')
+    plt.title('Genetic Algorithm')
+    plt.gca().invert_xaxis()
+    # Show the plot (or you can save it to a file with plt.savefig)
+    plt.show()
