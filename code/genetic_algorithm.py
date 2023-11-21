@@ -16,8 +16,8 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
                                                                                          road, cc_parameters, weight_func_1)
     fitness_list = ga_func.calc_fitness_list(population, weight_func_1, ramp_cars_list, cc_parameters, road)
     #print("population :",population)
-    best_solution = None
-    best_fitness = 0
+    best_solution_overall = None
+    best_fitness_overall = 0
     GA_generation_num = []
     GA_best_sol_in_generation = []
     #print(fitness_list)
@@ -40,11 +40,12 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
             mutated_feasibility = False
             genes_to_mutate_num = random.randint(0, solution_size)
             while(not mutated_feasibility):
-                print("not feasible mutation")
                 mutated_inividual = ga_func.mutate(individual,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parameters)
                 if sequence.check_feasibility(mutated_inividual,road,cc_parameters):
                     offspring.append(mutated_inividual)
                     mutated_feasibility = True
+                    break
+                print("not feasible mutation")
 
 
         #cross over
@@ -56,32 +57,30 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
             parent1 = parents[i]
             parent2 = parents[i + 1]
             children_feasibility = False
-            while(not children_feasibility):
-                
+            while(not children_feasibility):                
                 [child1,child2] = ga_func.crossover(parent1, parent2, main_cars_list, ramp_cars_list,cc_parameters) 
                 if sequence.check_feasibility(child1,road,cc_parameters) and sequence.check_feasibility(child1,road,cc_parameters) :
                     children_feasibility = True
+                    break
+                print("not feasible childeren")
             offspring.append(child1)
             offspring.append(child2)
-
-        print("length of offspring",len(offspring))
 
         # Replace the old population with the new one
         #print("new spring is", len(offspring[0]),len(offspring[1]),len(offspring[2]))
         population = offspring
         fitness_list = ga_func.calc_fitness_list(population, weight_func_1, ramp_cars_list, cc_parameters, road)
-        print("new fitness list :",fitness_list)
         # Update the best solution found so far
         #print(fitness)
         #print(population[0][1].traveled_time)
-        best_solution_index = np.argmax(fitness_list)
-        if best_solution is None or fitness_list[best_solution_index] > best_fitness:
-            print('best solution index :',best_solution_index)
-            print("length of population",len(offspring))
-            best_solution = population[best_solution_index]
-            best_fitness = fitness_list[best_solution_index]
+        best_solution_index_per_iteration = np.argmax(fitness_list)
+
+        if best_solution_overall is None or fitness_list[best_solution_index_per_iteration] > best_fitness_overall:
+            best_solution_overall = population[best_solution_index_per_iteration]
+            best_fitness_overall = fitness_list[best_solution_index_per_iteration]
 
         GA_generation_num.append(generation)
-        GA_best_sol_in_generation.append(best_fitness)
+        GA_best_sol_in_generation.append(fitness_list[best_solution_index_per_iteration])
+        print('best solution in this iteration is :',fitness_list[best_solution_index_per_iteration])
 
-    return GA_generation_num,GA_best_sol_in_generation,best_solution, best_fitness
+    return GA_generation_num,GA_best_sol_in_generation,best_solution_overall, best_fitness_overall

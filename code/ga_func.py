@@ -41,7 +41,7 @@ def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
     # Implement crossover logic to generate offspring from parents
     parent1_binary = sequence.turn_car_objects_to_binary(parent1)
     parent2_binary = sequence.turn_car_objects_to_binary(parent2)
-    crossover_point = np.random.randint(1, len(parent1) - 1)
+    crossover_point = np.random.randint(0, len(parent1) - 1)
     child1_binary = (parent1_binary)
     child1_binary[crossover_point:]=((parent2_binary)[crossover_point:])
     child2_binary = (parent2_binary)
@@ -62,7 +62,9 @@ def mutate(bad_sol,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parame
     random_indices = random.sample(range(len(bad_sol)), genes_to_mutate_num)
     # Flip the values at the randomly selected indices
     for index in random_indices:
-        bad_sol_binary[index] = 1 - bad_sol_binary[index]  #flip 0 to 1 , and 1 to 0
+        probability_to_change = random.random()
+        if probability_to_change > 0.5:
+            bad_sol_binary[index] = 1 - bad_sol_binary[index]  #flip 0 to 1 , and 1 to 0
 
     bad_sol_letters = sequence.turn_binary_to_letters(bad_sol_binary)
     bad_sol = sequence.get_car_object_list_from_sequence(bad_sol_letters, main_cars_list, ramp_cars_list, cc_parameters)
