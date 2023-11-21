@@ -1,4 +1,9 @@
-def fitness(w1, ramp_cars_total_num, ramp_cars_used, obj_sequence, distances_to_merge, road):
+def fitness(w1, ramp_cars_total_num, obj_sequence, distances_to_merge, road):
+    ramp_cars_used=0
+    for car in obj_sequence:
+        if car.name >= chr(97):
+            ramp_cars_used+=1
+
     f1 = ramp_cars_used / ramp_cars_total_num
     sum1 = 0
     sum2 = 0

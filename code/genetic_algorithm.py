@@ -2,22 +2,27 @@ import numpy as np
 import objective_func
 import matplotlib.pyplot as plt
 import ga_func
+import sequence
 
 
 
-def genetic_algorithm(population_size, generations,elitism_ratio, crossover_rate,mutation_rate,
-        main_cars_list, ramp_cars_list,solution_size, weight_func_1, road,cc_parameters):
+def genetic_algorithm(population_size, generation_size , crossover_ratio,mutation_ratio, genes_to_mutate_num,
+        main_cars_list, ramp_cars_list, solution_size, weight_func_1, road,cc_parameters):
     #get number of parents
-    parents_num = int(crossover_rate*population_size)
-    [population, cars_ramp_merged_num, distances_to_merge_list, fitness_list] = ga_func.initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,
+
+    elitism_ratio = 1 - mutation_ratio - crossover_ratio
+    parents_num = int(crossover_ratio*population_size)
+    [population, initial_fitness_list] = ga_func.initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,
                                                                                          road, cc_parameters, weight_func_1)
 
     best_solution = None
     best_objective = 0
-    
-    for _ in range(generations):
-        
-        offspring = []         
+    fitness_list = initial_fitness_list
+
+    for _ in range(generation_size):
+        offspring = []  
+
+        #eliets
         # Select parents based on fitness
         num_elite = int(elitism_ratio * population_size)
         #get eliete members and add them
@@ -25,16 +30,23 @@ def genetic_algorithm(population_size, generations,elitism_ratio, crossover_rate
         #print("elite is:", elite)
         for sol in elite: 
             offspring.append(sol)
-        #get the worse individuls
-        mutations_num = int(mutation_rate * population_size)
-        mutated = sorted(population, key=lambda x: fitness_list[population.index(x)])[:mutations_num]
-        #mutate them and then to the new population
-        mutated = ga_func.mutate(mutated,mutations_num,main_cars_list, ramp_cars_list, cc_parameters)
-        for sol in mutated:
-            offspring.append(sol)
 
-        parents = ga_func.select_parents(parents_num,population,weight_func_1, cars_ramp_no,cars_ramp_merged_no,distances_to_merge, min_v_main,max_v_main)
+        #mutation
+        #get the worset individuls
+        mutations_num = int(mutation_ratio * population_size)
+        worst_individuals = sorted(population, key=lambda x: fitness_list[population.index(x)])[:mutations_num]
+        #mutate them untill feasable and add them to the new population
+        for individual in worst_individuals:
+            feasibility = False
+            while(not feasibility):
+                mutated_inividual = ga_func.mutate(individual,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parameters)
+                if sequence.check_feasibility(mutated_inividual,road,cc_parameters):
+                    offspring.append(mutated_inividual)
+                    feasibility = True
 
+            
+        #cross over
+        parents = ga_func.select_parents(parents_num,population,fitness_list)
         # Generate offspring through crossover and mutation
         print("Number of parents is :", len(parents))
         for i in range(0, len(parents), 2):
@@ -45,9 +57,10 @@ def genetic_algorithm(population_size, generations,elitism_ratio, crossover_rate
             offspring.append(child2)
 
         # Replace the old population with the new one
-        print("new spring is", len(offspring[0]),len(offspring[1]),len(offspring[2]))
+        #print("new spring is", len(offspring[0]),len(offspring[1]),len(offspring[2]))
         population = offspring
-        print(fitness)
+        fitness_list = ga_func.calc_fitness_list(population, weight_func_1, ramp_cars_list , road)
+        
         # Update the best solution found so far
         #print(fitness)
         #print(population[0][1].traveled_time)

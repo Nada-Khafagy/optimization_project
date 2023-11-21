@@ -3,32 +3,32 @@ import objective_func
 import copy
 import random
 from objective_func import fitness
-from sequence import randomize_sequence
-from sequence import get_car_object_list_from_sequence
-from sequence import get_distance_to_merge_list
-from sequence import check_feasibility
-from sequence import turn_binary_to_letters
-from sequence import turn_letters_to_binary
-from sequence import turn_car_objects_to_letters
-from sequence import turn_car_objects_to_binary
+import sequence
 
 
 def initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,road, cc_parameters, weight_func_1):
     population = []
-    fitness_list = []
+    initial_fitness_list = []
 
     while (len(population) < population_size):
         # Generate a random solution
-        [solution, cars_ramp_merged_num] = randomize_sequence(solution_size, len(ramp_cars_list))
-        [solution_obj, distances_to_merge_list] = get_car_object_list_from_sequence(solution, main_cars_list, ramp_cars_list, cc_parameters)
-        
-        if check_feasibility(solution_obj,road,cc_parameters) == True : 
+        [solution, cars_ramp_merged_num] = sequence.randomize_sequence(solution_size, len(ramp_cars_list))
+        [solution_obj, distances_to_merge_list] = sequence.get_car_object_list_from_sequence(solution, main_cars_list, ramp_cars_list, cc_parameters)  
+        #make sure it is feasibile    
+        if sequence.check_feasibility(solution_obj,road,cc_parameters) == True : 
             population.append(solution_obj)
             #print("in the iteration", get_sequence_in_letters_from_cars(solution_obj))
-        #append fitness list 
-        curr_sol_fitness = fitness(weight_func_1, len(ramp_cars_list),cars_ramp_merged_num,solution_obj,distances_to_merge_list, road)
-        fitness_list.append(curr_sol_fitness)
-    return population, cars_ramp_merged_num, distances_to_merge_list, fitness_list
+
+    initial_fitness_list = calc_fitness_list(population, weight_func_1, ramp_cars_list, cc_parameters, road)
+    return population, initial_fitness_list
+
+def calc_fitness_list(population, weight_func_1, ramp_cars_list, cc_parameters, road):
+    fitness_list = []
+    for individual in population:
+        distances_to_merge_list = sequence.get_distance_to_merge_list(individual,cc_parameters)
+        curr_individual_fitness = fitness(weight_func_1, len(ramp_cars_list), individual,distances_to_merge_list, road)
+        fitness_list.append(curr_individual_fitness)
+
 
 # The crossover function takes two parent solutions (parent1 and parent2) 
 #and performs crossover to create a child solution. It randomly selects a crossover point and combines
@@ -36,43 +36,40 @@ def initialize_population(population_size, solution_size, main_cars_list, ramp_c
 
 def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
     # Implement crossover logic to generate offspring from parents
-    parent1_binary = turn_car_objects_to_binary(parent1)
-    parent2_binary = turn_car_objects_to_binary(parent2)
+    parent1_binary = sequence.turn_car_objects_to_binary(parent1)
+    parent2_binary = sequence.turn_car_objects_to_binary(parent2)
     crossover_point = np.random.randint(1, len(parent1) - 1)
     child1_binary = (parent1_binary)
     child1_binary[crossover_point:]=((parent2_binary)[crossover_point:])
     child2_binary = (parent2_binary)
     child2_binary[crossover_point:]=((parent1_binary)[crossover_point:])
 
-    child1_letters = turn_binary_to_letters(child1_binary)
-    child2_letters = turn_binary_to_letters(child2_binary)
-    child1 = get_car_object_list_from_sequence(child1_letters, main_cars_list, ramp_cars_list, cc_parameters)
-    child2 = get_car_object_list_from_sequence(child2_letters, main_cars_list, ramp_cars_list, cc_parameters)
+    child1_letters = sequence.turn_binary_to_letters(child1_binary)
+    child2_letters = sequence.turn_binary_to_letters(child2_binary)
+    child1 = sequence.get_car_object_list_from_sequence(child1_letters, main_cars_list, ramp_cars_list, cc_parameters)
+    child2 = sequence.get_car_object_list_from_sequence(child2_letters, main_cars_list, ramp_cars_list, cc_parameters)
 
     return child1,child2
  
-# The crossover function takes two parent solutions (parent1 and parent2) 
-#and performs crossover to create a child solution. It randomly selects a crossover point and combines
-# the information from both parents to create the child solution.
-
-def mutate(bad_sol,mutations_num,main_cars_list, ramp_cars_list, cc_parameters):
-    bad_sol_binary =turn_car_objects_to_binary(bad_sol)
-    random_indices = random.sample(range(len(bad_sol)), mutations_num)
+# The mutate function introduces random changes (mutations) to the solution. 
+# It randomly selects two cars and swaps their positions with a probability defined by the mutation_rate.
+def mutate(bad_sol,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parameters):
+    bad_sol_binary = sequence.turn_car_objects_to_binary(bad_sol)
+    random_indices = random.sample(range(len(bad_sol)), genes_to_mutate_num)
     # Flip the values at the randomly selected indices
     for index in random_indices:
-        bad_sol_binary[index] = 1-bad_sol_binary[index]  
-    bad_sol_letters =turn_binary_to_letters(bad_sol_binary)
-    bad_sol =get_car_object_list_from_sequence(bad_sol_letters, main_cars_list, ramp_cars_list, cc_parameters)
+        bad_sol_binary[index] = 1 - bad_sol_binary[index]  #flip 0 to 1 , and 1 to 0
+
+    bad_sol_letters = sequence.turn_binary_to_letters(bad_sol_binary)
+    bad_sol = sequence.get_car_object_list_from_sequence(bad_sol_letters, main_cars_list, ramp_cars_list, cc_parameters)
     return bad_sol
 
-### 
-# The mutate function introduces random changes (mutations) to the solution. It randomly selects two cars and swaps their positions with a probability defined by the mutation_rate.
-def select_parents(parents_num,population,weight_func_1, cars_ramp_no,cars_ramp_merged_no,distances_to_merge, min_v_main,max_v_main):
-    # Implement your logic for parent selection based on fitness
-    fitness_values = [objective_func.objective_func(weight_func_1, cars_ramp_no,cars_ramp_merged_no, solution,distances_to_merge,
-                                                     min_v_main,max_v_main) for solution in population]
-    total_fitness = sum(fitness_values)
-    probabilities = [fitness / total_fitness for fitness in fitness_values]
+
+# The select_parents function is responsible for selecting two parent solutions based on their fitness.
+# It uses a random tournament selection mechanism to choose parents with higher fitness values.
+def select_parents(parents_num, population, fitness_list):
+    total_fitness = sum(fitness_list)
+    probabilities = [fitness / total_fitness for fitness in fitness_list]
     parents=[]
     while (len(parents)<parents_num):
         parent = random.choices(population, probabilities)[0]
@@ -83,7 +80,6 @@ def select_parents(parents_num,population,weight_func_1, cars_ramp_no,cars_ramp_
     #    print("parent1 and parent 2 is",parent1, parent2)
     return parents
 
-###
-# The select_parents function is responsible for selecting two parent solutions based on their fitness. It uses a random tournament selection mechanism to choose parents with higher fitness values.
+
 
 

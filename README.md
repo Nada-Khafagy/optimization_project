@@ -34,6 +34,7 @@ enjoy looking at the vehicles of the main line on the map :)
 - check for collision
 - make visualzation start from zero and sraet platooning from decsision point 
 - choose what to do if no main line cars in solution (reject?)
+- remove r merged and make it calculated in objective function
 
 ## problems with GA
 - checking feasability in cross over and mutation

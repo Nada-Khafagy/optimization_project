@@ -12,8 +12,8 @@ def randomize_sequence(sequence_size, ramp_cars_max_num):
             if sequence[random_num] == 1:
                 sequence[random_num] = 0
                 break  # Exit the inner loop
-    [sequence, index_ramp_car] = turn_binary_to_letters(sequence)
-    return sequence, index_ramp_car
+    sequence = turn_binary_to_letters(sequence)
+    return sequence
 
 def get_car_object_list_from_sequence(sequence, main_cars_list, ramp_cars_list, cc_parameters):
     #assume solution 
@@ -65,7 +65,7 @@ def turn_binary_to_letters(binary_sequence):
         else:
             letter_sequence.append(chr(97+index_ramp_car))
             index_ramp_car+=1  
-    return letter_sequence, index_ramp_car
+    return letter_sequence
 
 def turn_letters_to_binary(letters_sequence):
     binary_sequence = [0 if letter >= chr(97) else 1 for letter in letters_sequence]
