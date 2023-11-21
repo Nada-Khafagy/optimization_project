@@ -5,36 +5,34 @@ import ga_func
 
 
 
-def genetic_algorithm(main_cars, ramp_cars,population_size, generations,elitism_ratio, crossover_rate, mutation_rate,
-                      min_v_main, max_v_main, weight_func_1, cars_ramp_no, solution_size):
+def genetic_algorithm(population_size, generations,elitism_ratio, crossover_rate,mutation_rate,
+        main_cars_list, ramp_cars_list,solution_size, weight_func_1, road,cc_parameters):
+    #get number of parents
     parents_num = int(crossover_rate*population_size)
-    [population,cars_ramp_merged_no, distances_to_merge] = ga_func.initialize_population(population_size, solution_size,  main_cars, ramp_cars)
+    [population, cars_ramp_merged_num, distances_to_merge_list, fitness_list] = ga_func.initialize_population(population_size, solution_size, main_cars_list, ramp_cars_list,
+                                                                                         road, cc_parameters, weight_func_1)
 
     best_solution = None
     best_objective = 0
     
     for _ in range(generations):
-        # Evaluate the fitness of each individual in the population
-        offspring = [] 
-        print("length of population is:", len(population[0]),len(population[1]),len(population[2]), solution_size)
-        fitness = [objective_func.objective_func(weight_func_1, cars_ramp_no, cars_ramp_merged_no, ind,
-                                                distances_to_merge, min_v_main, max_v_main) for ind in population]
-
+        
+        offspring = []         
         # Select parents based on fitness
         num_elite = int(elitism_ratio * population_size)
-         # Replace the old population with the new one (excluding elites)
-        for i in range(len(population)):
-            for car in population[i]:
-                car.return_to_initial_conditions()
-        elite = sorted(population, key=lambda x: -fitness[population.index(x)])[:num_elite]
+        #get eliete members and add them
+        elite = sorted(population, key=lambda x: - fitness_list[population.index(x)])[:num_elite]
         #print("elite is:", elite)
-        
         for sol in elite: 
             offspring.append(sol)
-        num_mutated = int(mutation_rate * population_size)
-        mutated = sorted(population, key=lambda x: fitness[population.index(x)])[:num_mutated]
-        ga_func.mutate(mutated)
-        for sol in mutated: offspring.append(sol)
+        #get the worse individuls
+        mutations_num = int(mutation_rate * population_size)
+        mutated = sorted(population, key=lambda x: fitness_list[population.index(x)])[:mutations_num]
+        #mutate them and then to the new population
+        mutated = ga_func.mutate(mutated,mutations_num,main_cars_list, ramp_cars_list, cc_parameters)
+        for sol in mutated:
+            offspring.append(sol)
+
         parents = ga_func.select_parents(parents_num,population,weight_func_1, cars_ramp_no,cars_ramp_merged_no,distances_to_merge, min_v_main,max_v_main)
 
         # Generate offspring through crossover and mutation
@@ -60,6 +58,3 @@ def genetic_algorithm(main_cars, ramp_cars,population_size, generations,elitism_
             best_objective = fitness[best_solution_index]
 
     return best_solution, best_objective
-
-
-### The genetic_algorithm function orchestrates the entire Genetic Algorithm. It iterates through generations, evaluates the fitness of each solution, selects parents, performs crossover and mutation to generate offspring, and updates the population. The best solution found during the iterations is returned

@@ -55,14 +55,14 @@ def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
 #and performs crossover to create a child solution. It randomly selects a crossover point and combines
 # the information from both parents to create the child solution.
 
-def mutate(bad_sol,n):
+def mutate(bad_sol,mutations_num,main_cars_list, ramp_cars_list, cc_parameters):
     bad_sol_binary =turn_car_objects_to_binary(bad_sol)
-    random_indices = random.sample(range(len(bad_sol)), n)
+    random_indices = random.sample(range(len(bad_sol)), mutations_num)
     # Flip the values at the randomly selected indices
     for index in random_indices:
         bad_sol_binary[index] = 1-bad_sol_binary[index]  
     bad_sol_letters =turn_binary_to_letters(bad_sol_binary)
-    bad_sol =get_car_object_list_from_sequence(bad_sol_letters)
+    bad_sol =get_car_object_list_from_sequence(bad_sol_letters, main_cars_list, ramp_cars_list, cc_parameters)
     return bad_sol
 
 ### 

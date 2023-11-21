@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import scatter_custom
 
 def visualization(main_road,on_ramp,car_sequence,cc_parameters):
+    for car in car_sequence:
+        car.return_to_initial_conditions()
+
     #car labels
     car_labels = []  # List to store car labels
     car_labels_updates = [] 
