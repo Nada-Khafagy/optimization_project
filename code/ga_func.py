@@ -56,6 +56,7 @@ def crossover(parent1, parent2, main_cars_list, ramp_cars_list, cc_parameters):
  
 # The mutate function introduces random changes (mutations) to the solution. 
 # It randomly selects two cars and swaps their positions with a probability defined by the mutation_rate.
+#mutates only one individual
 def mutate(bad_sol,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parameters):
     bad_sol_binary = sequence.turn_car_objects_to_binary(bad_sol)
     random_indices = random.sample(range(len(bad_sol)), genes_to_mutate_num)

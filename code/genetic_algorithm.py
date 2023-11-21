@@ -29,14 +29,7 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
         #get eliete members and add them
         #elite = sorted(population, key = lambda x: - fitness_list[population.index(x)])[:num_elite]
         elite =[]
-        copied_elite_list = list(fitness_list)
-        for _ in range(num_elite):
-            try:
-                index_for_elite = np.argmax(copied_elite_list)
-                elite.append(population[index_for_elite])
-                copied_elite_list.remove(index_for_elite)
-            except:
-                print("index_for_elite is out of bound, check elitism ratio")
+        elite = sorted(population, key = lambda x: - fitness_list[population.index(x)])[:num_elite]
         #print("elite is:", elite)
         for sol in elite: 
             offspring.append(sol)
@@ -44,6 +37,7 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
        # Generate offspring through mutations
         #get the worset individuls
         mutations_num = int(mutation_ratio * population_size)
+
         worst_individuals = sorted(population, key=lambda x: fitness_list[population.index(x)])[:mutations_num]
         #mutate them untill feasable and add them to the new population
         for individual in worst_individuals:
