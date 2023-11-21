@@ -45,7 +45,7 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
                     offspring.append(mutated_inividual)
                     mutated_feasibility = True
                     break
-                print("not feasible mutation")
+                #print("not feasible mutation")
 
 
         #cross over
@@ -62,7 +62,7 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
                 if sequence.check_feasibility(child1,road,cc_parameters) and sequence.check_feasibility(child1,road,cc_parameters) :
                     children_feasibility = True
                     break
-                print("not feasible childeren")
+                #print("not feasible childeren")
             offspring.append(child1)
             offspring.append(child2)
 
