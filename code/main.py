@@ -77,13 +77,14 @@ cooling_rate = 5
 linear = True
 plot_best = False
 
-'''
+
 #SA 
 [best_solution,best_objective, SA_temprature_List, SA_fitness_List] = Simulated_annealing.simulated_annealing(initial_temperature,
 final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
  highway, cc_parameters,plot_best)  
 #return cars to initial conditions
-
+for car in list(main_cars_list+ramp_cars_list):
+    car.return_to_initial_conditions()
 print("Best SA solution:", sequence.turn_car_objects_to_binary(best_solution))
 print("Best SA objective:", best_objective)
 
@@ -93,7 +94,9 @@ plot_SA(SA_temprature_List,SA_fitness_List)
 Simulation.visualization(main_cars_list,ramp_cars_list,best_solution,cc_parameters)
 #print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
 
-'''
+#return cars to initial conditions
+for car in list(main_cars_list+ramp_cars_list):
+    car.return_to_initial_conditions()
 
 # Genetic Algorithm Example usage
 population_size = 10
@@ -106,6 +109,7 @@ mutation_ratio = 0.2
 
 
 plot_GA(GA_generation_num, GA_best_sol_in_generation)
+#return cars to initial conditions
 for car in list(main_cars_list+ramp_cars_list):
     car.return_to_initial_conditions()
 Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
