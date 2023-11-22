@@ -75,10 +75,13 @@ def mutate(bad_sol,genes_to_mutate_num,main_cars_list, ramp_cars_list, cc_parame
 # It uses a random tournament selection mechanism to choose parents with higher fitness values.
 def select_parents(parents_num, population,fitness_list ):
     #Roulette Wheel Selection
+
     fitness_list_copy = list(fitness_list)
+    population_list_copy = list(population)
     total_fitness = sum(fitness_list_copy)
     probabilities = [fitness / total_fitness for fitness in fitness_list]
     parents = []
+
     #while (len(parents) < parents_num):
     #    parent = random.choices(population, probabilities)[0]
     #    if(not(parent in parents)):
@@ -86,17 +89,20 @@ def select_parents(parents_num, population,fitness_list ):
     #while parent2 == parent1:
     #    parent2 = random.choices(population, probabilities)[0]
     #    print("parent1 and parent 2 is",parent1, parent2)
+    
+    #we don't consider the probability for those who were already selected in our implementation
     for _ in range(parents_num):
-
         probabilities = [fitness / total_fitness for fitness in fitness_list_copy]     
         # Use random.choices to select an individual based on probabilities
-        parent = random.choices(population, probabilities)[0]      
+        parent = random.choices(population_list_copy, probabilities)[0]      
         # Append the selected parent to the list
-        parents.append(parent)      
+        parents.append(parent)
+
         # Remove the selected parent from the population
-        index_to_remove = population.index(parent)
-        population.remove(parent)
+        index_to_remove = population_list_copy.index(parent)
+        population_list_copy.remove(parent)
         fitness_list_copy.remove(fitness_list_copy[index_to_remove])
+
         # Recalculate total_fitness for the updated population
         total_fitness = sum(fitness_list_copy)
     

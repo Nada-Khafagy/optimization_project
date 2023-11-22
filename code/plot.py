@@ -18,6 +18,5 @@ def plot_GA(x,y):
     plt.xlabel('generation number')
     plt.ylabel('Best individual in this generation')
     plt.title('Genetic Algorithm')
-    plt.gca().invert_xaxis()
     plt.grid(True)
     plt.show()

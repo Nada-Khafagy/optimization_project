@@ -21,6 +21,8 @@ min_a_ramp = -20 #m/s^2
 max_a_ramp =  20 #m/s^2
 position_lower_limit = 5
 position_upper_limit = 8
+#objective function
+weight_func_1 = 0.7
 
 #parameters for cruise control
 decision_position = 40 #m, position where we start applying cruise control
@@ -73,7 +75,6 @@ iteration_per_temp = 1
 #cooling_rate = (final_temperature-initial_temperature) / maximum_steps_num
 cooling_rate = 5
 linear = True
-weight_func_1 = 0.7
 plot_best = False
 
 '''
@@ -97,11 +98,14 @@ Simulation.visualization(main_cars_list,ramp_cars_list,best_solution,cc_paramete
 # Genetic Algorithm Example usage
 population_size = 10
 generation_size = 100
-crossover_ratio = 0.8
-mutation_ratio = 0.1
-#elitism_rate = 1 - mutation_rate - crossover_rate
-weight_func_1 = 0.7
-[GA_generation_num,GA_best_sol_in_generation, best_solution, best_objective] = genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
+crossover_ratio = 0.7
+mutation_ratio = 0.2
+
+[GA_generation_num,GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
         main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
 
-plot_GA(GA_generation_num,GA_best_sol_in_generation)
+
+plot_GA(GA_generation_num, GA_best_sol_in_generation)
+for car in list(main_cars_list+ramp_cars_list):
+    car.return_to_initial_conditions()
+Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
