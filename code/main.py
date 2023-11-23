@@ -1,14 +1,14 @@
-from initialization import create_cars
-from cruise_control import cruise_control_parameters
+import time
+import initialization
+import cruise_control
 import Simulated_annealing
 import road_class
 import vehicle_generation_parameters_class
 import Simulation
 import random
 import sequence 
-from plot import plot_SA
-from plot import plot_GA
-from genetic_algorithm import genetic_algorithm
+import plot
+import genetic_algorithm
 
 #constraints
 min_v_main = 10 * (5/18) #m/s 2.777 
@@ -22,7 +22,7 @@ max_a_ramp =  20 #m/s^2
 position_lower_limit = 5
 position_upper_limit = 8
 #objective function
-weight_func_1 = 0.7
+weight_func_1 = 0.2
 
 #parameters for cruise control
 decision_position = 40 #m, position where we start applying cruise control
@@ -40,7 +40,7 @@ solution_size = random.randint(min(main_cars_num,ramp_cars_num), main_cars_num) 
 #for testing SA with same scenario - delete later
 main_cars_num = 10
 ramp_cars_num = 10
-solution_size = min(main_cars_num,ramp_cars_num)
+solution_size = 10
 #main cars intial parameters
 intial_main_position = decision_position - random.randint(10, 30)
 initial_main_velocity = 60  * 5/18  #m/s
@@ -55,7 +55,7 @@ initial_ramp_accelration = 0 #m/s^2
 highway = road_class.Road(min_v_main,max_v_main,min_v_ramp,max_v_ramp,min_a_main,max_a_main,min_a_ramp, max_a_ramp,
                            position_lower_limit, position_upper_limit)
 #create cruise contol parameters 
-cc_parameters = cruise_control_parameters(decision_position, merging_position, sampling_time, desired_distance_bet_cars,
+cc_parameters = cruise_control.cruise_control_parameters(decision_position, merging_position, sampling_time, desired_distance_bet_cars,
                                            alpha, beta, gamma)
 #collect all parameters in one object, for main and ramp cars
 main_car_generation_parameters = vehicle_generation_parameters_class.vehicle_generation_parameters(intial_main_position,
@@ -64,8 +64,8 @@ ramp_car_generation_parameters = vehicle_generation_parameters_class.vehicle_gen
                                             initial_ramp_velocity, initial_ramp_accelration, ramp_cars_num,0, highway)
 
 #create cars, save all of their info
-main_cars_list = create_cars(main_car_generation_parameters)
-ramp_cars_list = create_cars(ramp_car_generation_parameters)
+main_cars_list = initialization.create_cars(main_car_generation_parameters)
+ramp_cars_list = initialization.create_cars(ramp_car_generation_parameters)
 
 #SA Example usage
 initial_temperature = 500
@@ -79,19 +79,24 @@ plot_best = False
 
 
 #SA 
-[best_solution,best_objective, SA_temprature_List, SA_fitness_List] = Simulated_annealing.simulated_annealing(initial_temperature,
+start_time_SA = time.time()
+[best_solution_SA,best_objective_SA, SA_temprature_List, SA_fitness_List] = Simulated_annealing.simulated_annealing(initial_temperature,
 final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
- highway, cc_parameters,plot_best)  
+ highway, cc_parameters,plot_best) 
+end_time_SA = time.time() 
+execution_time_SA = end_time_SA - start_time_SA
+print("SA excution time: ", execution_time_SA)
+
 #return cars to initial conditions
 for car in list(main_cars_list+ramp_cars_list):
     car.return_to_initial_conditions()
-print("Best SA solution:", sequence.turn_car_objects_to_binary(best_solution))
-print("Best SA objective:", best_objective)
+print("Best SA solution:", sequence.turn_car_objects_to_binary(best_solution_SA))
+print("Best SA fitness:", best_objective_SA)
 
-plot_SA(SA_temprature_List,SA_fitness_List)
+plot.plot_SA(SA_temprature_List,SA_fitness_List)
   
 #changed function parameters, check file before uncommenting
-Simulation.visualization(main_cars_list,ramp_cars_list,best_solution,cc_parameters)
+Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA,cc_parameters)
 #print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
 
 #return cars to initial conditions
@@ -103,12 +108,17 @@ population_size = 10
 generation_size = 100
 crossover_ratio = 0.7
 mutation_ratio = 0.2
-
-[GA_generation_num,GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
+start_time_GA = time.time()
+[GA_generation_num,GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
         main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
+end_time_GA = time.time() 
+execution_time_GA = end_time_GA - start_time_GA
+print("GA excution time: ", execution_time_GA)
+print("Best GA solution:", sequence.turn_car_objects_to_binary(best_solution_GA))
+print("Best GA fitness:", best_objective_GA)
 
 
-plot_GA(GA_generation_num, GA_best_sol_in_generation)
+plot.plot_GA(GA_generation_num, GA_best_sol_in_generation)
 #return cars to initial conditions
 for car in list(main_cars_list+ramp_cars_list):
     car.return_to_initial_conditions()

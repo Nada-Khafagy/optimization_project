@@ -13,6 +13,7 @@ def randomize_sequence(sequence_size, ramp_cars_max_num):
                 sequence[random_num] = 0
                 break  # Exit the inner loop
     sequence = turn_binary_to_letters(sequence)
+    
     return sequence
 
 def get_car_object_list_from_sequence(sequence, main_cars_list, ramp_cars_list, cc_parameters):

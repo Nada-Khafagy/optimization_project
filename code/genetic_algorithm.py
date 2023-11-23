@@ -43,7 +43,7 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
                     offspring.append(mutated_inividual)
                     mutated_feasibility = True
                     break
-                print("not feasible mutation")
+                #print("not feasible mutation")
 
 
         #cross over
@@ -64,7 +64,7 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
                 if sequence.check_feasibility(child1,road,cc_parameters) and sequence.check_feasibility(child1,road,cc_parameters) :
                     children_feasibility = True
                     break
-                print("not feasible childeren")
+                #print("not feasible childeren")
             offspring.append(child1)
             #in case of odd num of children, don't add the second child
             if ((index == (len(parents)-2)) and (children_num % 2 == 1)) :
@@ -85,6 +85,6 @@ def genetic_algorithm(population_size, generation_size , crossover_ratio, mutati
         #update generation best
         GA_generation_num.append(generation)
         GA_best_sol_in_generation.append(fitness_list[best_solution_index_per_iteration])
-        print('best solution in this iteration is :',fitness_list[best_solution_index_per_iteration])
+        #print('best solution in this iteration is :',fitness_list[best_solution_index_per_iteration])
 
     return GA_generation_num,GA_best_sol_in_generation,best_solution_overall, best_fitness_overall

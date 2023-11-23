@@ -9,7 +9,6 @@ def fitness(w1, ramp_cars_total_num, obj_sequence, cc_paramters, road):
     if not sequence.check_feasibility( obj_sequence, road, cc_paramters):
         return -1
 
-
     ramp_cars_used=0
     for car in obj_sequence:
         if car.name >= chr(97):
