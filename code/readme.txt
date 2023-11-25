@@ -8,5 +8,4 @@ opjective function for the accepted sequences are printed
 and Finally, the best solution for the SA is saved and printed
 
 GA:
-the best solutoin's fitness is printed each generation
-then the plot shows the best in each generation vs generation
+the plot shows the best in each generation vs generation
