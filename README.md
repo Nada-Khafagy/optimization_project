@@ -35,6 +35,7 @@ enjoy looking at the vehicles of the main line on the map :)
 - check for collision
 - make visualzation start from zero and sraet platooning from decsision point 
 - choose what to do if no main line cars in solution (reject?)
+- do as paper does --> use throuhput
 
 
 ## code of conduct 
