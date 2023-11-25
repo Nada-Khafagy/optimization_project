@@ -13,9 +13,12 @@ class Vehicle:
         self.distance_to_lead = 0
         self.distance_to_merge = 0  #difference in position between this vehicle and its leading vehicle
         self.traveled_time = 0
+        self.lead_vehicle = None
 
 
-    def update_cruise_control(self, lead_vehicle, cc_parameters):       
+    def update_cruise_control(self, lead_vehicle, cc_parameters): 
+        self.lead_vehicle = lead_vehicle
+
         if lead_vehicle is not None:
             self.distance_to_lead = lead_vehicle.position - self.position
             af = cc_parameters.alpha * lead_vehicle.acceleration + cc_parameters.beta * ( lead_vehicle.velocity-self.velocity) + cc_parameters.gamma * (self.distance_to_lead - cc_parameters.desired_distance)
@@ -36,7 +39,8 @@ class Vehicle:
     def __str__(self):
         return f"Vehicle: Name = {self.name}, Position = {self.position}, Velocity={self.velocity}, Accelration = {self.acceleration}, Distance to Lead={self.distance_to_lead}, traveled time = {self.traveled_time}"
     
-    def check_feasibility (self, road):
+    def follows_road_rules(self, road):
+        #first check constraints
         #if it is a main car, use main constraints
         if self.name < chr(97):
             min_v = road.min_v_main
@@ -53,6 +57,9 @@ class Vehicle:
             return False
         if (min_a >= self.acceleration) or (self.acceleration >= max_a) :
             return False
+        
+        #check collision
+        
         return True
     
     def return_to_initial_conditions(self):

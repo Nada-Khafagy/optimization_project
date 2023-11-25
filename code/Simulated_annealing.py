@@ -36,13 +36,14 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
             new_fitness = fitness(weight_func_1, len(ramp_cars_list),new_solution_obj, cc_parameters, road)
             #delta f
             delta_fitness = new_fitness - current_fitness
+            #print("delta_fitness",delta_fitness)
             if delta_fitness >= 0: #we are maximizing so if it is positive, it is a good thing
                 current_solution = new_solution_obj
                 current_fitness = new_fitness
             else :
                 #p 
                 k = 50 # multiply by delta fitness to make probability change greater 
-                acceptance_prob = (math.e)** ((k*delta_fitness) / curr_temperature )
+                acceptance_prob = ((math.e)**(k*delta_fitness)) / curr_temperature 
                 random_num =  np.random.rand()
                 if acceptance_prob > random_num:
                     current_solution = new_solution_obj
@@ -58,6 +59,10 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
                 curr_temperature = initial_temperature - cooling_rate*iteration_index
             else :
                 curr_temperature = initial_temperature * (cooling_rate**iteration_index)
+
+            #print("curr_temperature",curr_temperature)
+            #print("current SA solution:", sequence.turn_car_objects_to_binary(current_solution))
+            #print("current SA fitness:", current_fitness)
 
             #collect data to plot
             SA_temprature_List.append(curr_temperature) #x-axsis

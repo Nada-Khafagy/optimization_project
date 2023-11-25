@@ -1,6 +1,14 @@
 import random
 from collections import deque
 from cruise_control import cruise_control
+class sequence:
+    def __init__(self, sequence, main_cars_list, ramp_cars_list, road, cc_parameters):
+        self.sequence = sequence
+        self.main_cars_list = main_cars_list
+        self.ramp_cars_list = ramp_cars_list
+        self.road = road
+        self.cc_parameters = cc_parameters
+
 
 #returns list of sequence ['A','B']
 def randomize_sequence(sequence_size, ramp_cars_max_num):
@@ -43,11 +51,13 @@ def check_feasibility(vehicle_objects_sequence, road, cc_parameters):
     feasibility = True
     while(vehicle_objects_sequence[-1].position < cc_parameters.merging_position ): 
         #move all cars for one time sample 
-        cruise_control(vehicle_objects_sequence, cc_parameters)        
+        cruise_control(vehicle_objects_sequence, cc_parameters) 
+        #chack if all cars follows road rules       
         for car in vehicle_objects_sequence:
             #if one car is not feasible, whole solution is not feasible
-            if not car.check_feasibility(road):
+            if not car.follows_road_rules(road):
                 return False    
+        
 
     return feasibility
 

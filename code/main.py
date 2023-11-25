@@ -10,6 +10,18 @@ import sequence
 import plot
 import genetic_algorithm
 
+
+#what do you want?
+simulate_SA = False
+simulate_GA = True
+visualize_simulation = True
+get_avarge = False
+num_runs = 100
+
+
+if not get_avarge:
+    num_runs = 1
+
 #constraints
 min_v_main = 10 * (5/18) #m/s 2.777 
 max_v_main = 120 * (5/18) #m/s 33.33
@@ -68,58 +80,73 @@ main_cars_list = initialization.create_cars(main_car_generation_parameters)
 ramp_cars_list = initialization.create_cars(ramp_car_generation_parameters)
 
 #SA Example usage
-initial_temperature = 500
+initial_temperature = 1000
 final_temperature = 0.05
-num_iterations = 500 
+num_iterations = 1000 
 iteration_per_temp = 1
-#cooling_rate = (final_temperature-initial_temperature) / maximum_steps_num
+#cooling_rate = (final_temperature-initial_temperature) / num_iterations
 cooling_rate = 5
 linear = True
-plot_best = False
+plot_best = True
+SA_exec_time_list = []
 
 
 #SA 
-start_time_SA = time.time()
-[best_solution_SA,best_objective_SA, SA_temprature_List, SA_fitness_List] = Simulated_annealing.simulated_annealing(initial_temperature,
-final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
- highway, cc_parameters,plot_best) 
-end_time_SA = time.time() 
-execution_time_SA = end_time_SA - start_time_SA
-print("SA excution time: ", execution_time_SA)
+if simulate_SA:
+    for _ in range(num_runs):
+        SA_start_time = time.time()
+        [best_solution_SA,best_objective_SA, SA_temprature_List, SA_fitness_List] = Simulated_annealing.simulated_annealing(initial_temperature,
+        final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
+        highway, cc_parameters,plot_best) 
+        SA_end_time = time.time() 
+        SA_execution_time = SA_end_time - SA_start_time
+        SA_exec_time_list.append(SA_execution_time)
+        print(f"SA excution time for run {_} :", SA_execution_time)
+        print("Best SA solution:", sequence.turn_car_objects_to_binary(best_solution_SA))
+        print("Best SA fitness:", best_objective_SA)
+    
+    #get average excution time 
+    SA_avg_execution_time = sum(SA_exec_time_list)/len(SA_exec_time_list)
+    print("Average SA excution time: ", SA_avg_execution_time)
 
-#return cars to initial conditions
-for car in list(main_cars_list+ramp_cars_list):
-    car.return_to_initial_conditions()
-print("Best SA solution:", sequence.turn_car_objects_to_binary(best_solution_SA))
-print("Best SA fitness:", best_objective_SA)
+    plot.plot_SA(SA_temprature_List,SA_fitness_List)
 
-plot.plot_SA(SA_temprature_List,SA_fitness_List)
-  
-#changed function parameters, check file before uncommenting
-Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA,cc_parameters)
-#print(objective_func.objective_func(w1,cars_ramp_no,r,sequence_full_info,distances_to_merge,min_v,max_v))
+        #return cars to initial conditions
+    for car in list(main_cars_list+ramp_cars_list):
+        car.return_to_initial_conditions()
 
-#return cars to initial conditions
-for car in list(main_cars_list+ramp_cars_list):
-    car.return_to_initial_conditions()
+    if visualize_simulation:
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA,cc_parameters)
+
+
+
 
 # Genetic Algorithm Example usage
 population_size = 10
 generation_size = 100
-crossover_ratio = 0.7
-mutation_ratio = 0.2
-start_time_GA = time.time()
-[GA_generation_num,GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
-        main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
-end_time_GA = time.time() 
-execution_time_GA = end_time_GA - start_time_GA
-print("GA excution time: ", execution_time_GA)
-print("Best GA solution:", sequence.turn_car_objects_to_binary(best_solution_GA))
-print("Best GA fitness:", best_objective_GA)
+crossover_ratio = 0.8
+mutation_ratio = 0.1
+GA_exec_time_list = []
 
+if simulate_GA:
+    for _ in range(num_runs):
+        GA_start_time = time.time()
+        [GA_generation_num,GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
+                main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
+        GA_end_time = time.time() 
+        GA_execution_time = GA_end_time - GA_start_time
+        GA_exec_time_list.append(GA_execution_time)
+        print(f"GA excution time for run {_} :",GA_execution_time)
+        print("Best GA solution:", sequence.turn_car_objects_to_binary(best_solution_GA))
+        print("Best GA fitness:", best_objective_GA)
 
-plot.plot_GA(GA_generation_num, GA_best_sol_in_generation)
-#return cars to initial conditions
-for car in list(main_cars_list+ramp_cars_list):
-    car.return_to_initial_conditions()
-Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
+    GA_avg_execution_time = sum(GA_exec_time_list)/len(GA_exec_time_list)
+    print("Average GA excution time: ", GA_avg_execution_time)
+
+    plot.plot_GA(GA_generation_num, GA_best_sol_in_generation)
+    #return cars to initial conditions
+    for car in list(main_cars_list+ramp_cars_list):
+        car.return_to_initial_conditions()
+
+    if visualize_simulation:
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
