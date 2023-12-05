@@ -59,6 +59,9 @@ class Vehicle:
             return False
         
         #check collision
+        if self.lead_vehicle is not None:
+            return (self.lead_vehicle.position - self.position ) >= 5
+        
         
         return True
     

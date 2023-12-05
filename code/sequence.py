@@ -24,7 +24,7 @@ def randomize_sequence(sequence_size, ramp_cars_max_num):
     
     return sequence
 
-def get_car_object_list_from_sequence(sequence, main_cars_list, ramp_cars_list, cc_parameters):
+def get_car_object_list_from_sequence(sequence, main_cars_list, ramp_cars_list):
     #assume solution 
     binary_sequece = turn_letters_to_binary(sequence)
     vehicle_objects_sequence = list()
@@ -57,7 +57,7 @@ def check_feasibility(vehicle_objects_sequence, road, cc_parameters):
             #if one car is not feasible, whole solution is not feasible
             if not car.follows_road_rules(road):
                 return False    
-        
+        # check on number of ramp cars
 
     return feasibility
 

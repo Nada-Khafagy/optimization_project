@@ -49,6 +49,10 @@ enjoy looking at the vehicles of the main line on the map :)
 - use try-except blocks in error handling
 - try to write in the documentation a lil bit just so people understand plz
 - DON'T REPEAT CODE
-- be as descriptive as possible! i swear if i see one more 'i' i will kill someone
+- be as descriptive as possible! i swear if i see one more 'i' i will kill someone.
+- The No surprise principle
+- the open close principle.
+- take care of side effect functions (a function that returns a value should not have a side effect).
+- use exceptions, inside functions don't write anything except the try block.
 
 

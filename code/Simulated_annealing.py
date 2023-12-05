@@ -25,7 +25,7 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
             #generate new solution
             new_solution = sequence.randomize_sequence(solution_size, len(ramp_cars_list))  
             #get objects from the randomized list
-            new_solution_obj = sequence.get_car_object_list_from_sequence(new_solution, main_cars_list, ramp_cars_list, cc_parameters)
+            new_solution_obj = sequence.get_car_object_list_from_sequence(new_solution, main_cars_list, ramp_cars_list)
             #check feasibility
             if (not sequence.check_feasibility(new_solution_obj, road, cc_parameters)):
                 #don't count this iteration and get another solution
