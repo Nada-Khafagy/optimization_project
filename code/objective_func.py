@@ -1,20 +1,21 @@
 import sequence
-def fitness(w1, ramp_cars_total_num, obj_sequence, cc_paramters, road):
+#vehicle_sequence is binary
+def fitness(w1, vehicle_sequence, cc_parameters, road, main_cars_list, ramp_cars_list):
+    obj_sequence = sequence.get_car_object_list_from_sequence(vehicle_sequence, main_cars_list, ramp_cars_list)
     #just to make sure everything is correct
     for car in obj_sequence:
         car.return_to_initial_conditions()
 
-    distances_to_merge = sequence.get_distance_to_merge_list(obj_sequence, cc_paramters)
-    
-    if not sequence.check_feasibility( obj_sequence, road, cc_paramters):
+    distances_to_merge = sequence.get_distance_to_merge_list(obj_sequence, cc_parameters)   
+    if not sequence.check_feasibility(vehicle_sequence, road, cc_parameters, main_cars_list, ramp_cars_list):
         return -1
 
-    ramp_cars_used=0
+    ramp_cars_used = 0
     for car in obj_sequence:
         if car.name >= chr(97):
             ramp_cars_used+=1
 
-    f1 = ramp_cars_used / ramp_cars_total_num
+    f1 = ramp_cars_used / len(ramp_cars_list)
     sum1 = 0
     sum2 = 0
     sum3 = 0

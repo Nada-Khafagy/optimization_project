@@ -10,7 +10,7 @@ class sequence:
         self.cc_parameters = cc_parameters
 
 
-#returns list of sequence ['A','B']
+#returns list of sequence in binary format
 def randomize_sequence(sequence_size, ramp_cars_max_num):
     sequence = [1] * sequence_size #create list of the final optimized seq. 
     ramp_cars_num = random.randint(1, ramp_cars_max_num) #randomize the number of added ramp cars to the final list 
@@ -20,13 +20,11 @@ def randomize_sequence(sequence_size, ramp_cars_max_num):
             if sequence[random_num] == 1:
                 sequence[random_num] = 0
                 break  # Exit the inner loop
-    sequence = turn_binary_to_letters(sequence)
-    
     return sequence
 
-def get_car_object_list_from_sequence(sequence, main_cars_list, ramp_cars_list):
-    #assume solution 
-    binary_sequece = turn_letters_to_binary(sequence)
+#works with binary 
+def get_car_object_list_from_sequence(binary_sequece, main_cars_list, ramp_cars_list):
+
     vehicle_objects_sequence = list()
     main_cars_queue = deque(main_cars_list)
     ramp_cars_queue = deque(ramp_cars_list)
@@ -45,19 +43,28 @@ def get_distance_to_merge_list(vehicle_objects_sequence, cc_parameters):
     return distances_to_merge_list
 
 #check constraints
-def check_feasibility(vehicle_objects_sequence, road, cc_parameters):
+#vehicle sequence is binary
+def check_feasibility(vehicle_sequence, road, cc_parameters, main_cars_list, ramp_cars_list):
+    curr_ramp_cars_num = len(vehicle_sequence) - sum(vehicle_sequence);     
+    # check on number of ramp cars if solution has more ramp cars than actual scenario
+    if curr_ramp_cars_num > len(ramp_cars_list):
+        return False
+    
+    #get objects to simulate the dynamics
+    vehicle_objects_sequence = get_car_object_list_from_sequence(vehicle_sequence, main_cars_list, ramp_cars_list)
     for car in vehicle_objects_sequence :
          car.return_to_initial_conditions()
     feasibility = True
     while(vehicle_objects_sequence[-1].position < cc_parameters.merging_position ): 
         #move all cars for one time sample 
         cruise_control(vehicle_objects_sequence, cc_parameters) 
-        #chack if all cars follows road rules       
+        
+        #chack if all cars follows road rules     
         for car in vehicle_objects_sequence:
             #if one car is not feasible, whole solution is not feasible
+            #check if the car follows car rulse (velocity / accelration)
             if not car.follows_road_rules(road):
                 return False    
-        # check on number of ramp cars
 
     return feasibility
 
