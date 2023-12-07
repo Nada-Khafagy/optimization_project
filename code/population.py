@@ -1,12 +1,13 @@
 import numpy as np
-import objective_func
-import copy
 import random
 from objective_func import fitness
 import sequence
+from particle_class import Particle
+from copy import copy
+
 
 #returns solution in binary
-def initialize_population(population_size, solution_size,  main_cars_list ,ramp_cars_list,road, cc_parameters, weight_func_1):
+def initialize_population(population_size, solution_size,  main_cars_list ,ramp_cars_list,road, cc_parameters):
     population = []
     while (len(population) < population_size):
         # Generate a random solution in binary
@@ -16,6 +17,7 @@ def initialize_population(population_size, solution_size,  main_cars_list ,ramp_
             population.append(solution)
     return population
 
+#returns a list of fitnesses
 def calc_fitness_list(population, weight_func_1, main_cars_list, ramp_cars_list, cc_parameters, road):
     fitness_list = []
     for individual in population:
@@ -31,7 +33,6 @@ def calc_fitness_list(population, weight_func_1, main_cars_list, ramp_cars_list,
 # The crossover function takes two parent solutions (parent1 and parent2) 
 #and performs crossover to create a child solution. It randomly selects a crossover point and combines
 # the information from both parents to create the child solution.
-
 def crossover(parent1, parent2):
     # Implement crossover logic to generate offspring from parents
     crossover_point = np.random.randint(0, len(parent1) - 1)
@@ -81,5 +82,63 @@ def select_parents(parents_num, population, fitness_list):
     return parents
 
 
+def update__global_best(particles, synchronous, star_topology):
+    #get intial global best 
+    if synchronous:
+        global_best_particle = sorted(particles, key=lambda Particle: Particle.fitness)[0]
+        global_best_particle_fitness = global_best_particle.fitness
+        global_best_particle_position = global_best_particle.position
+    else :
+        global_best_particle_fitness = 0
+        global_best_particle_position = 0
+
+    #assign the instance variables for each particle
+    for  particle in particles:
+        if not synchronous:
+            if particle.fitness > global_best_particle_fitness :
+                global_best_particle_fitness = particle.fitness
+                global_best_particle_position = particle.position
+    
+        if star_topology:
+            particle.Nbest_fitness = global_best_particle_fitness
+            particle.Nbest_position =  global_best_particle_position
+        #assume ring tobology
+        else:
+            previous_particle = particles[particles.index(particle) - 1]
+            next_particle = particles[particles.index(particle) + 1]
+            if previous_particle.fitness > next_particle.fitness :
+                particle.Nbest_fitness = previous_particle.fitness
+                particle.Nbest_position = previous_particle.position
+            elif previous_particle.fitness < next_particle.fitness :
+                particle.Nbest_fitness = next_particle.fitness
+                particle.Nbest_position = next_particle.position
+
+    return global_best_particle_fitness,global_best_particle_position
+        
+
+
+def update_motion(particles, w, c1, c2, vel_min, vel_max, weight_func_1, cc_parameters, road, main_cars_list, ramp_cars_list):
+    for particle in particles:   
+        # update velocity for binary PSO
+        r1 = np.random.random(size = len(particle.solution))
+        r2 = np.random.random(size = len(particle.solution))
+
+        particle.velocity = (w * particle.velocity) + (c1 * r1 * (particle.Pbest_position - particle.position)) + (c2 * r2 * (particle.Nbest_position - particle.position))
+
+        # apply velocity limits for binary PSO
+        vel_min = -1.0
+        vel_max = 1.0
+        particle.velocity = np.clip(particle.velocity, vel_min, vel_max)
+
+        # update position for binary PSO
+        particle.position = particle.position + particle.velocity
+
+        # update fitness and solution
+        particle.fitness = fitness(weight_func_1, particle, cc_parameters, road, main_cars_list, ramp_cars_list)
+        
+        # update personal Best
+        if particle.fitness > particle.Pbest_fitness:
+            particle.Pbest_fitness = particle.fitness
+            particle.Pbest_position = particle.position
 
 

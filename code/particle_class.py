@@ -1,9 +1,11 @@
 import numpy as np
 class Particle:
-    def __init__(self, solution_size):
-        self.position = np.random.randint(2, size = solution_size)  # Initialize binary positions (0 or 1)
-        self.velocity = np.zeros(shape = solution_size)
+    def __init__(self, intial_position):
+        self.position = intial_position
+        self.velocity = 0.01 #near zero velocity
         self.solution = []  # Initialize the solution attribute
         self.fitness = 0
-        self.best_position = self.position
-        self.best_fitness = self.cost
+        self.Pbest_position = self.position
+        self.Pbest_fitness = self.fitness
+        self.Nbest_position = self.position
+        self.Nbest_fitness = self.fitness

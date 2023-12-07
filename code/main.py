@@ -9,17 +9,17 @@ import random
 import sequence 
 import plot
 import genetic_algorithm
-import dpso
+import discrete_pso
 
 #what do you want?
 simulate_SA = False
 simulate_GA = False
 simulate_PSO = True
 visualize_simulation = False
-get_avarge = False
+get_avarge_time = False
 num_runs = 100
 
-if not get_avarge:
+if not get_avarge_time:
     num_runs = 1
 
 #constraints
@@ -131,7 +131,7 @@ GA_exec_time_list = []
 if simulate_GA:
     for _ in range(num_runs):
         GA_start_time = time.time()
-        [GA_generation_num,GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size,
+        [GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size,
         generation_size , crossover_ratio, mutation_ratio, main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
         GA_end_time = time.time() 
         GA_execution_time = GA_end_time - GA_start_time
@@ -143,7 +143,7 @@ if simulate_GA:
     GA_avg_execution_time = sum(GA_exec_time_list)/len(GA_exec_time_list)
     print("Average GA excution time: ", GA_avg_execution_time)
 
-    plot.plot_GA(GA_generation_num, GA_best_sol_in_generation)
+    plot.plot_GA(range(generation_size), GA_best_sol_in_generation)
     #return cars to initial conditions
     for car in list(main_cars_list + ramp_cars_list):
         car.return_to_initial_conditions()
@@ -154,20 +154,26 @@ if simulate_GA:
 
 
 #discrete PSO
-var_num = 1             # Number of Decision Variables
-var_min = 0            # Lower Bound of Variables
-var_max = 1            # Upper Bound of Variables
-population_size = 50
+var_min = 0 # Lower Bound of Variables
+var_max = 1 # Upper Bound of Variables
+Neighborhood_size = 30
 max_iter = 100
-c1 = 2.0  # cognitive parameter
-c2 = 2.0  # social parameter
-w = 0.5   # inertia weight
-vel_min = -1.0
-vel_max = 1.0
-w_max = 0.9  # Maximum inertia weight
+synchronous = False 
+varying_w = True
+star_topology = True
+c1 = 1.49  # cognitive parameter
+c2 = 1.49 # social parameter
+inertia_w = 0.792  # inertia weight intially
 w_min = 0.2  # Minimum inertia weight
 max_iter = 100  # Maximum number of iterations
+vel_min = -1.0 #minimum velocity of a particle
+vel_max = 1.0 #maximum velocity of a particle
+
+
+
+
 
 if simulate_PSO:
-    [] = dpso.discrete_pso(solution_size, var_min, var_max, population_size, max_iter, c1, c2, vel_min, vel_max, w_max, w_min,
-                            weight_func_1, cc_parameters, highway, main_cars_list, ramp_cars_list)
+    [] = discrete_pso.discrete_pso(solution_size, var_min, var_max, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous,
+                                   w_min, vel_min, vel_max, star_topology,varying_w ,weight_func_1, cc_parameters, highway,
+                                     main_cars_list, ramp_cars_list)
