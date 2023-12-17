@@ -24,3 +24,15 @@ def plot_GA(x,y):
     plt.minorticks_on()
     plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
     plt.show()
+
+def plot_DPSO(x,y):      
+    plt.plot(x,y)
+    # Add labels and a legend
+    plt.ylim(0, 1)
+    plt.xlabel(r'iteration number', fontsize=14)
+    plt.ylabel(r'Best individual in this iteration', fontsize=14)
+    plt.title(r'Discrete Particle swarm', fontsize=16)
+    plt.grid(True)
+    plt.minorticks_on()
+    plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+    plt.show()

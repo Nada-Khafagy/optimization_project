@@ -63,7 +63,7 @@ def check_feasibility(vehicle_sequence, road, cc_parameters, main_cars_list, ram
         for car in vehicle_objects_sequence:
             #if one car is not feasible, whole solution is not feasible
             #check if the car follows car rulse (velocity / accelration)
-            if not car.follows_road_rules(road):
+            if not car.follows_road_rules(road,cc_parameters):
                 return False    
 
     return feasibility

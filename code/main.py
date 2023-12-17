@@ -154,10 +154,8 @@ if simulate_GA:
 
 
 #discrete PSO
-var_min = 0 # Lower Bound of Variables
-var_max = 1 # Upper Bound of Variables
 Neighborhood_size = 30
-max_iter = 100
+max_iter = 100 #number of iterations
 synchronous = False 
 varying_w = True
 star_topology = True
@@ -166,14 +164,19 @@ c2 = 1.49 # social parameter
 inertia_w = 0.792  # inertia weight intially
 w_min = 0.2  # Minimum inertia weight
 max_iter = 100  # Maximum number of iterations
-vel_min = -1.0 #minimum velocity of a particle
-vel_max = 1.0 #maximum velocity of a particle
+vel_max = 0.6 #maximum velocity of a particle
 
 
 
 
 
 if simulate_PSO:
-    [] = discrete_pso.discrete_pso(solution_size, var_min, var_max, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous,
-                                   w_min, vel_min, vel_max, star_topology,varying_w ,weight_func_1, cc_parameters, highway,
-                                     main_cars_list, ramp_cars_list)
+    [best_particle_fitness_list, best_particle_position_list, best_fitness_overall, best_solution_overall] = discrete_pso.discrete_pso(solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous, w_min, vel_max,
+    star_topology, varying_w, weight_func_1, cc_parameters, highway, main_cars_list, ramp_cars_list)
+    print(f"best solution overall {best_solution_overall} and its fitness is {best_fitness_overall}")
+
+    plot.plot_DPSO(range(max_iter),best_particle_fitness_list)  
+    
+    #not 2d --> will not work for now
+    #plot.plot_DPSO(range(max_iter),best_particle_position_list)    
+
