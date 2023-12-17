@@ -136,6 +136,7 @@ if simulate_GA:
         GA_end_time = time.time() 
         GA_execution_time = GA_end_time - GA_start_time
         GA_exec_time_list.append(GA_execution_time)
+        
         print(f"GA excution time for run {_} :",GA_execution_time)
         print("Best GA solution:", best_solution_GA)
         print("Best GA fitness:", best_objective_GA)

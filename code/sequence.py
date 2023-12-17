@@ -57,7 +57,7 @@ def check_feasibility(vehicle_sequence, road, cc_parameters, main_cars_list, ram
     feasibility = True
     while(vehicle_objects_sequence[-1].position < cc_parameters.merging_position ): 
         #move all cars for one time sample 
-        cruise_control(vehicle_objects_sequence, cc_parameters) 
+        cruise_control(vehicle_objects_sequence, cc_parameters)
         
         #chack if all cars follows road rules     
         for car in vehicle_objects_sequence:

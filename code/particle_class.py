@@ -3,6 +3,7 @@ class Particle:
     def __init__(self, intial_solution):
         self.solution = intial_solution 
         self.position = np.array(self.solution) #get position vector from solution list
+        zeros = len(intial_solution)*[0.1]
         self.velocity = np.zeros(len(intial_solution)) #zero velocity
         self.fitness = 0
         #personal best

@@ -121,38 +121,50 @@ def update_global_best(particles, synchronous, star_topology):
 
 #using the binary discritaization developed by the creators of pso
 def update_motion(particles, c1, c2, vel_max, weight_func_1, cc_parameters, road, main_cars_list, ramp_cars_list):
-    for particle in particles:   
-        # update fitness (scalar)
-        particle.fitness = fitness(weight_func_1, particle.solution, cc_parameters, road, main_cars_list, ramp_cars_list)
-        
-        # generate random vectors for each particle, (random number for each position of the particle)
-        r1 = np.random.random(size = len(particle.solution))
-        r2 = np.random.random(size = len(particle.solution))
+   
+    for particle in particles:
+        particle_feasibility = False     
+        while (not particle_feasibility):
+            #update fitness (scalar)
+            particle.fitness = fitness(weight_func_1, particle.solution, cc_parameters, road, main_cars_list, ramp_cars_list)
 
-        # velocity is a vector 
-        particle.velocity = (particle.velocity) + (np.dot((c1*r1), (particle.Pbest_position - particle.position))) + np.dot((c2 * r2), (particle.Nbest_position - particle.position))
+            #generate random vectors for each particle, (random number for each position of the particle)
+            r1 = np.random.random(size = len(particle.solution))
+            r2 = np.random.random(size = len(particle.solution))
 
-        #saturate if above max
-        particle.velocity = np.clip(particle.velocity, -vel_max, vel_max)
+            inertia_component =  particle.velocity
+            cognitive_component = np.dot((c1*r1), (particle.Pbest_position - particle.position)) 
+            social_component = np.dot((c2 * r2), (particle.Nbest_position - particle.position))
 
-        # update position for binary PSO
-        particle.position = particle.position + particle.velocity
-        
-        # update solution from sigmoid
-        new_solution = []
-        for x in particle.position:
-            sigmoid = 1 / 1 + math.exp(-1 * x)
-            r = np.random.rand()
-            print(f"velocity : {particle.velocity}, position : {x}, sigmoid : {sigmoid} , and r : {r}")
-            if (r < sigmoid):
-                new_solution.append(1)
-            else:
-                new_solution.append(0)
+            print(f"inertia: {inertia_component}, cognitive: {cognitive_component}, social : {social_component}")
+            #velocity is a vector 
+            particle.velocity = inertia_component + cognitive_component + social_component
+
+            #saturate if above max
+            #particle.velocity = np.clip(particle.velocity, -vel_max, vel_max)
+
+            #update position for binary PSO
+            particle.position = particle.position + particle.velocity
             
-        particle.solution = new_solution
+            print(f"velocity: {particle.velocity}, position : {particle.position}")
+            #update solution from sigmoid
+            new_solution = []
+            for x in particle.position:
+                sigmoid = 1 / (1 + math.exp(-1 * x))
+                r = np.random.rand()  
+                if (r < sigmoid):
+                    new_solution.append(1)
+                else:
+                    new_solution.append(0)
+                #print(f" sigmoid : {sigmoid} , and r : {r}")
+
+            #check if feasibile
+            if (sequence.check_feasibility(new_solution, road, cc_parameters, main_cars_list, ramp_cars_list)):
+                particle.solution = new_solution
+                particle_feasibility = True
+
         print("new solution", new_solution)
-        
-        # update personal Best
+        #update personal Best
         if particle.fitness > particle.Pbest_fitness:
             particle.Pbest_fitness = particle.fitness
             particle.Pbest_solution = particle.solution
