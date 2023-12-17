@@ -17,6 +17,9 @@ def create_cars(vehicle_generation_parameters):
         velocity = vehicle_generation_parameters.initial_velocity
         accelration = vehicle_generation_parameters.initial_acceleration  
         new_car = vehicle_class.Vehicle(name, position, velocity, accelration)
+        #we need to save intial lead car in same lane to check collision
+        if i > 1 :
+            new_car.initial_lead_vehicle = car_list[i-1]
         car_list.append(new_car)
 
     return car_list

@@ -1,4 +1,5 @@
 import numpy as np
+import math 
 import random
 from objective_func import fitness
 import sequence
@@ -12,9 +13,11 @@ def initialize_population(population_size, solution_size,  main_cars_list ,ramp_
     while (len(population) < population_size):
         # Generate a random solution in binary
         solution = sequence.randomize_sequence(solution_size, len(ramp_cars_list)) 
+        #print("random sequence",solution)
          #make sure it is feasibile  
         if sequence.check_feasibility(solution, road,cc_parameters,main_cars_list, ramp_cars_list) : 
             population.append(solution)
+            #print("accepted sequence", solution)
     return population
 
 #returns a list of fitnesses
@@ -81,64 +84,77 @@ def select_parents(parents_num, population, fitness_list):
         total_fitness = sum(fitness_list_copy)  
     return parents
 
-
-def update__global_best(particles, synchronous, star_topology):
+#returns position not solution
+def update_global_best(particles, synchronous, star_topology):
     #get intial global best 
     if synchronous:
         global_best_particle = sorted(particles, key=lambda Particle: Particle.fitness)[0]
         global_best_particle_fitness = global_best_particle.fitness
-        global_best_particle_position = global_best_particle.position
+        global_best_particle_solution = global_best_particle.position
     else :
         global_best_particle_fitness = 0
-        global_best_particle_position = 0
+        global_best_particle_solution = 0
 
     #assign the instance variables for each particle
     for  particle in particles:
         if not synchronous:
             if particle.fitness > global_best_particle_fitness :
                 global_best_particle_fitness = particle.fitness
-                global_best_particle_position = particle.position
+                global_best_particle_solution = particle.solution
     
         if star_topology:
             particle.Nbest_fitness = global_best_particle_fitness
-            particle.Nbest_position =  global_best_particle_position
+            particle.solution =  global_best_particle_solution
         #assume ring tobology
         else:
             previous_particle = particles[particles.index(particle) - 1]
             next_particle = particles[particles.index(particle) + 1]
             if previous_particle.fitness > next_particle.fitness :
                 particle.Nbest_fitness = previous_particle.fitness
-                particle.Nbest_position = previous_particle.position
+                particle.Nbest_solution = previous_particle.solution
             elif previous_particle.fitness < next_particle.fitness :
                 particle.Nbest_fitness = next_particle.fitness
-                particle.Nbest_position = next_particle.position
+                particle.Nbest_solution = next_particle.solutino
 
-    return global_best_particle_fitness,global_best_particle_position
+    return global_best_particle_fitness, global_best_particle_solution
         
 
-
-def update_motion(particles, w, c1, c2, vel_min, vel_max, weight_func_1, cc_parameters, road, main_cars_list, ramp_cars_list):
+#using the binary discritaization developed by the creators of pso
+def update_motion(particles, c1, c2, vel_max, weight_func_1, cc_parameters, road, main_cars_list, ramp_cars_list):
     for particle in particles:   
-        # update velocity for binary PSO
+        # update fitness (scalar)
+        particle.fitness = fitness(weight_func_1, particle.solution, cc_parameters, road, main_cars_list, ramp_cars_list)
+        
+        # generate random vectors for each particle, (random number for each position of the particle)
         r1 = np.random.random(size = len(particle.solution))
         r2 = np.random.random(size = len(particle.solution))
 
-        particle.velocity = (w * particle.velocity) + (c1 * r1 * (particle.Pbest_position - particle.position)) + (c2 * r2 * (particle.Nbest_position - particle.position))
+        # velocity is a vector 
+        particle.velocity = (particle.velocity) + (np.dot((c1*r1), (particle.Pbest_position - particle.position))) + np.dot((c2 * r2), (particle.Nbest_position - particle.position))
 
-        # apply velocity limits for binary PSO
-        vel_min = -1.0
-        vel_max = 1.0
-        particle.velocity = np.clip(particle.velocity, vel_min, vel_max)
+        #saturate if above max
+        particle.velocity = np.custom_clip(particle.velocity, -vel_max, vel_max)
 
         # update position for binary PSO
         particle.position = particle.position + particle.velocity
-
-        # update fitness and solution
-        particle.fitness = fitness(weight_func_1, particle, cc_parameters, road, main_cars_list, ramp_cars_list)
+        
+        # update solution from sigmoid
+        new_solution = []
+        for x in particle.position:
+            sigmoid = 1 / 1 + math.exp(-1 * x)
+            r = np.random.rand()
+            print(f"velocity : {particle.velocity}, position : {x}, sigmoid : {sigmoid} , and r : {r}")
+            if (r < sigmoid):
+                new_solution.append(1)
+            else:
+                new_solution.append(0)
+            
+        particle.solution = new_solution
+        print("new solution", new_solution)
         
         # update personal Best
         if particle.fitness > particle.Pbest_fitness:
             particle.Pbest_fitness = particle.fitness
-            particle.Pbest_position = particle.position
+            particle.Pbest_solution = particle.solution
 
 
