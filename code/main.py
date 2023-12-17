@@ -9,17 +9,17 @@ import random
 import sequence 
 import plot
 import genetic_algorithm
-
+import discrete_pso
 
 #what do you want?
 simulate_SA = False
-simulate_GA = True
-visualize_simulation = True
-get_avarge = False
+simulate_GA = False
+simulate_PSO = True
+visualize_simulation = False
+get_avarge_time = False
 num_runs = 100
 
-
-if not get_avarge:
+if not get_avarge_time:
     num_runs = 1
 
 #constraints
@@ -34,7 +34,7 @@ max_a_ramp =  20 #m/s^2
 position_lower_limit = 5
 position_upper_limit = 8
 #objective function
-weight_func_1 = 0.2
+weight_func_1 = 0.7
 
 #parameters for cruise control
 decision_position = 40 #m, position where we start applying cruise control
@@ -51,7 +51,7 @@ ramp_cars_num = random.randint(5,10) ##number of ramp cars generated
 solution_size = random.randint(min(main_cars_num,ramp_cars_num), main_cars_num) #maximum size for the optimization algorithm
 #for testing SA with same scenario - delete later
 main_cars_num = 10
-ramp_cars_num = 10
+ramp_cars_num = 5
 solution_size = 10
 #main cars intial parameters
 intial_main_position = decision_position - random.randint(10, 30)
@@ -87,7 +87,7 @@ iteration_per_temp = 1
 #cooling_rate = (final_temperature-initial_temperature) / num_iterations
 cooling_rate = 5
 linear = True
-plot_best = True
+plot_best = False
 SA_exec_time_list = []
 
 
@@ -102,21 +102,21 @@ if simulate_SA:
         SA_execution_time = SA_end_time - SA_start_time
         SA_exec_time_list.append(SA_execution_time)
         print(f"SA excution time for run {_} :", SA_execution_time)
-        print("Best SA solution:", sequence.turn_car_objects_to_binary(best_solution_SA))
+        print("Best SA solution:", best_solution_SA)
         print("Best SA fitness:", best_objective_SA)
     
     #get average excution time 
     SA_avg_execution_time = sum(SA_exec_time_list)/len(SA_exec_time_list)
     print("Average SA excution time: ", SA_avg_execution_time)
 
-    plot.plot_SA(SA_temprature_List,SA_fitness_List)
+    plot.plot_SA(SA_temprature_List, SA_fitness_List)
 
         #return cars to initial conditions
     for car in list(main_cars_list+ramp_cars_list):
         car.return_to_initial_conditions()
-
+    best_solution_SA_obj = sequence.get_car_object_list_from_sequence(best_solution_SA, main_cars_list, ramp_cars_list)
     if visualize_simulation:
-        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA,cc_parameters)
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA_obj,cc_parameters)
 
 
 
@@ -131,22 +131,49 @@ GA_exec_time_list = []
 if simulate_GA:
     for _ in range(num_runs):
         GA_start_time = time.time()
-        [GA_generation_num,GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size, generation_size , crossover_ratio, mutation_ratio,
-                main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
+        [GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size,
+        generation_size , crossover_ratio, mutation_ratio, main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
         GA_end_time = time.time() 
         GA_execution_time = GA_end_time - GA_start_time
         GA_exec_time_list.append(GA_execution_time)
         print(f"GA excution time for run {_} :",GA_execution_time)
-        print("Best GA solution:", sequence.turn_car_objects_to_binary(best_solution_GA))
+        print("Best GA solution:", best_solution_GA)
         print("Best GA fitness:", best_objective_GA)
 
     GA_avg_execution_time = sum(GA_exec_time_list)/len(GA_exec_time_list)
     print("Average GA excution time: ", GA_avg_execution_time)
 
-    plot.plot_GA(GA_generation_num, GA_best_sol_in_generation)
+    plot.plot_GA(range(generation_size), GA_best_sol_in_generation)
     #return cars to initial conditions
-    for car in list(main_cars_list+ramp_cars_list):
+    for car in list(main_cars_list + ramp_cars_list):
         car.return_to_initial_conditions()
 
+    best_solution_GA_obj = sequence.get_car_object_list_from_sequence(best_solution_GA, main_cars_list, ramp_cars_list)
     if visualize_simulation:
-        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA_obj,cc_parameters)
+
+
+#discrete PSO
+var_min = 0 # Lower Bound of Variables
+var_max = 1 # Upper Bound of Variables
+Neighborhood_size = 30
+max_iter = 100
+synchronous = False 
+varying_w = True
+star_topology = True
+c1 = 1.49  # cognitive parameter
+c2 = 1.49 # social parameter
+inertia_w = 0.792  # inertia weight intially
+w_min = 0.2  # Minimum inertia weight
+max_iter = 100  # Maximum number of iterations
+vel_min = -1.0 #minimum velocity of a particle
+vel_max = 1.0 #maximum velocity of a particle
+
+
+
+
+
+if simulate_PSO:
+    [] = discrete_pso.discrete_pso(solution_size, var_min, var_max, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous,
+                                   w_min, vel_min, vel_max, star_topology,varying_w ,weight_func_1, cc_parameters, highway,
+                                     main_cars_list, ramp_cars_list)
