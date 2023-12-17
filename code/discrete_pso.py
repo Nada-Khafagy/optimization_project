@@ -33,6 +33,7 @@ def discrete_pso( solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2,
     for itr in range(max_iter):
         #update fitness 
         solution_list = [particle.solution for particle in particles]
+        print("solution list ",solution_list)
         fitness_list = population.calc_fitness_list(solution_list, weight_func_1, main_cars_list, ramp_cars_list, cc_parameters, road)
 
         for fit, particle in zip(fitness_list, particles):
