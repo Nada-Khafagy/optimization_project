@@ -133,7 +133,7 @@ def update_motion(particles, c1, c2, vel_max, weight_func_1, cc_parameters, road
         particle.velocity = (particle.velocity) + (np.dot((c1*r1), (particle.Pbest_position - particle.position))) + np.dot((c2 * r2), (particle.Nbest_position - particle.position))
 
         #saturate if above max
-        particle.velocity = np.custom_clip(particle.velocity, -vel_max, vel_max)
+        particle.velocity = np.clip(particle.velocity, -vel_max, vel_max)
 
         # update position for binary PSO
         particle.position = particle.position + particle.velocity
