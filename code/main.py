@@ -9,12 +9,15 @@ import random
 import sequence 
 import plot
 import genetic_algorithm
+import BFFA
 import discrete_pso
+
 
 #what do you want?
 simulate_SA = False
 simulate_GA = False
-simulate_PSO = True
+simulate_PSO = False
+simulate_BFFA = True
 visualize_simulation = False
 get_avarge_time = False
 num_runs = 100
@@ -175,9 +178,28 @@ if simulate_PSO:
     [best_particle_fitness_list, best_particle_position_list, best_fitness_overall, best_solution_overall] = discrete_pso.discrete_pso(solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous, w_min, vel_max,
     star_topology, varying_w, weight_func_1, cc_parameters, highway, main_cars_list, ramp_cars_list)
     print(f"best solution overall {best_solution_overall} and its fitness is {best_fitness_overall}")
-
     plot.plot_DPSO(range(max_iter),best_particle_fitness_list)  
     
     #not 2d --> will not work for now
     #plot.plot_DPSO(range(max_iter),best_particle_position_list)    
 
+
+population_size = 6
+num_of_iteration = 20
+if simulate_BFFA:
+    t = 0
+    fitness_plot = []
+    iteration_plot = []
+    while t < num_of_iteration:
+        [sorted_firefly_population,sorted_fitness_list] = BFFA.binary_FFA(t,num_of_iteration,population_size,solution_size,main_cars_list,ramp_cars_list,weight_func_1 ,cc_parameters, highway)
+
+        best_sol_in_generation = sorted_firefly_population[0]
+        best_objective_in_generation = sorted_fitness_list[0]
+        fitness_plot.append(best_objective_in_generation)
+        iteration_plot.append(t)
+        t = t+1
+        print(sorted_fitness_list)
+    plot.plot_BFFA(iteration_plot, fitness_plot)
+   
+   # if visualize_simulation:
+    #    Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
