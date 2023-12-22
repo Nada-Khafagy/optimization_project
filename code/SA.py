@@ -4,12 +4,8 @@ import math
 import matplotlib.pyplot as plt
 import sequence
 
-
-
-
-def simulated_annealing(initial_temperature,
-final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
- road, cc_parameters, plot_best):   
+def simulated_annealing(SA_parameters): 
+    initial_temperature, final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,road, cc_parameters, plot_best = SA_parameters[:]
     current_solution = None
     current_fitness = 0
     best_solution = None
@@ -19,7 +15,6 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
     SA_temprature_List = []
     SA_fitness_List = []
     curr_temperature = initial_temperature
-
     while(curr_temperature > final_temperature) and (curr_temperature>0) and (iteration_index<num_iterations):
         for _ in range(iteration_per_temp):
             #generate new solution as a binary sequence
@@ -66,7 +61,7 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
             #print("Accepted Sequence is: ", sequence.turn_binary_to_letters(current_solution))
             #print("current fitness:", current_fitness)
           
-    return best_solution, best_fitness, SA_temprature_List, SA_fitness_List
+    return SA_temprature_List, SA_fitness_List, best_solution, best_fitness
 
 
 

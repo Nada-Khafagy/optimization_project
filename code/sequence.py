@@ -48,8 +48,7 @@ def check_feasibility(vehicle_sequence, road, cc_parameters, main_cars_list, ram
     curr_ramp_cars_num = len(vehicle_sequence) - sum(vehicle_sequence);     
     # check on number of ramp cars if solution has more ramp cars than actual scenario
     if curr_ramp_cars_num > len(ramp_cars_list):
-        return False
-    
+        return False 
     #get objects to simulate the dynamics
     vehicle_objects_sequence = get_car_object_list_from_sequence(vehicle_sequence, main_cars_list, ramp_cars_list)
     for car in vehicle_objects_sequence :

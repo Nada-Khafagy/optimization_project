@@ -6,9 +6,8 @@ import sequence
 import objective_func
 import population
 
-def discrete_pso( solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous, w_min, vel_max,
-    star_topology, varying_w, weight_func_1, cc_parameters, road, main_cars_list, ramp_cars_list):
-    
+def discrete_pso(DPSO_parameters):
+    solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous, w_min, vel_max, star_topology, varying_w, weight_func_1, cc_parameters, road, main_cars_list, ramp_cars_list = DPSO_parameters[:]
     # Create a population of particles with feasible positions:
     initial_solutions = population.initialize_population(Neighborhood_size, solution_size, main_cars_list, ramp_cars_list,road, cc_parameters)
     particles = [Particle(solution) for solution in initial_solutions] #intalizes solution and position
@@ -33,7 +32,7 @@ def discrete_pso( solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2,
     for itr in range(max_iter):
         #update fitness 
         solution_list = [particle.solution for particle in particles]
-        print("solution list ",solution_list)
+        #print("solution list ",solution_list)
         fitness_list = population.calc_fitness_list(solution_list, weight_func_1, main_cars_list, ramp_cars_list, cc_parameters, road)
 
         for fit, particle in zip(fitness_list, particles):
@@ -57,4 +56,4 @@ def discrete_pso( solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2,
         if varying_w :
             inertia_w = w_initial - itr * ((w_initial - w_min) / max_iter) 
         
-    return best_particle_fitness_list, best_particle_position_list, best_fitness_overall, best_solution_overall
+    return range(max_iter), best_particle_fitness_list, best_solution_overall, best_fitness_overall

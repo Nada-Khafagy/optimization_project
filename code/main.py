@@ -1,26 +1,29 @@
-import time
 import initialization
 import cruise_control
-import Simulated_annealing
 import road_class
 import vehicle_generation_parameters_class
 import Simulation
 import random
 import sequence 
-import plot
-import genetic_algorithm
-import BFFA
-import discrete_pso
-
+import performance
+import SA
+import GA
+import Rc_BFFA
+import DPSO
 
 #what do you want?
 simulate_SA = False
 simulate_GA = False
-simulate_PSO = False
-simulate_BFFA = True
+simulate_PSO = True
+simulate_BFFA = False
 visualize_simulation = False
-get_avarge_time = False
-num_runs = 100
+get_avarge_time = True
+num_runs = 10#for averging 
+compare_algos = True
+
+main_cars_num = 10
+ramp_cars_num = 5
+solution_size = 10
 
 if not get_avarge_time:
     num_runs = 1
@@ -48,14 +51,12 @@ alpha = 1 #k1 for cruise control
 beta = 1.2 #k2 for cruise control
 gamma = 0.5 #k3 for cruise control
 
-#parameters for intalizing cars info
-main_cars_num = random.randint(5,20) #number of main cars generated
-ramp_cars_num = random.randint(5,10) ##number of ramp cars generated
-solution_size = random.randint(min(main_cars_num,ramp_cars_num), main_cars_num) #maximum size for the optimization algorithm
+#parameters for intalizing cars info --> to make it dynamic
+#main_cars_num = random.randint(5,20) #number of main cars generated
+#ramp_cars_num = random.randint(5,10) ##numbser of ramp cars generated
+#solution_size = random.randint(min(main_cars_num,ramp_cars_num), main_cars_num) #maximum size for the optimization algorithm
 #for testing SA with same scenario - delete later
-main_cars_num = 10
-ramp_cars_num = 5
-solution_size = 10
+
 #main cars intial parameters
 intial_main_position = decision_position - random.randint(10, 30)
 initial_main_velocity = 60  * 5/18  #m/s
@@ -82,10 +83,13 @@ ramp_car_generation_parameters = vehicle_generation_parameters_class.vehicle_gen
 main_cars_list = initialization.create_cars(main_car_generation_parameters)
 ramp_cars_list = initialization.create_cars(ramp_car_generation_parameters)
 
+algo_list = []
+algo_parameters_list = []
+
 #SA Example usage
-initial_temperature = 1000
+initial_temperature = 500
 final_temperature = 0.05
-num_iterations = 1000 
+num_iterations = 100 
 iteration_per_temp = 1
 #cooling_rate = (final_temperature-initial_temperature) / num_iterations
 cooling_rate = 5
@@ -94,25 +98,26 @@ plot_best = False
 SA_exec_time_list = []
 
 
+
+SA_parameters = [initial_temperature,
+        final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
+        highway, cc_parameters,plot_best]
+
+
+
 #SA 
 if simulate_SA:
-    for _ in range(num_runs):
-        SA_start_time = time.time()
-        [best_solution_SA,best_objective_SA, SA_temprature_List, SA_fitness_List] = Simulated_annealing.simulated_annealing(initial_temperature,
-        final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
-        highway, cc_parameters,plot_best) 
-        SA_end_time = time.time() 
-        SA_execution_time = SA_end_time - SA_start_time
-        SA_exec_time_list.append(SA_execution_time)
-        print(f"SA excution time for run {_} :", SA_execution_time)
-        print("Best SA solution:", best_solution_SA)
-        print("Best SA fitness:", best_objective_SA)
-    
+    algo_list.append(SA.simulated_annealing)
+    algo_parameters_list.append(SA_parameters)
+    [SA_temprature_List, SA_fitness_List, best_solution_SA, best_objective_SA] = SA.simulated_annealing(SA_parameters) 
+    print("Best SA solution:", best_solution_SA)
+    print("Best SA fitness:", best_objective_SA)
     #get average excution time 
-    SA_avg_execution_time = sum(SA_exec_time_list)/len(SA_exec_time_list)
-    print("Average SA excution time: ", SA_avg_execution_time)
-
-    plot.plot_SA(SA_temprature_List, SA_fitness_List)
+    if get_avarge_time:
+        SA_avg_execution_time = performance.get_avg_running_time(SA.simulated_annealing,SA_parameters,num_runs)
+        print(f"Average SA excution time:  {SA_avg_execution_time} seconds")
+    if(not compare_algos):
+        performance.plot_fitness_against_progress(SA_temprature_List, SA_fitness_List, 'Simulated Annealing Algorithm', 'temprature', 'Fitness Value')
 
         #return cars to initial conditions
     for car in list(main_cars_list+ramp_cars_list):
@@ -122,8 +127,6 @@ if simulate_SA:
         Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA_obj,cc_parameters)
 
 
-
-
 # Genetic Algorithm Example usage
 population_size = 10
 generation_size = 100
@@ -131,23 +134,18 @@ crossover_ratio = 0.8
 mutation_ratio = 0.1
 GA_exec_time_list = []
 
+GA_parameters = [population_size,
+        generation_size , crossover_ratio, mutation_ratio, main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters]
+
 if simulate_GA:
-    for _ in range(num_runs):
-        GA_start_time = time.time()
-        [GA_best_sol_in_generation, best_solution_GA, best_objective_GA] = genetic_algorithm.genetic_algorithm(population_size,
-        generation_size , crossover_ratio, mutation_ratio, main_cars_list, ramp_cars_list, solution_size, weight_func_1, highway,cc_parameters)
-        GA_end_time = time.time() 
-        GA_execution_time = GA_end_time - GA_start_time
-        GA_exec_time_list.append(GA_execution_time)
-        
-        print(f"GA excution time for run {_} :",GA_execution_time)
-        print("Best GA solution:", best_solution_GA)
-        print("Best GA fitness:", best_objective_GA)
-
-    GA_avg_execution_time = sum(GA_exec_time_list)/len(GA_exec_time_list)
-    print("Average GA excution time: ", GA_avg_execution_time)
-
-    plot.plot_GA(range(generation_size), GA_best_sol_in_generation)
+    algo_list.append(GA.genetic_algorithm)
+    algo_parameters_list.append(GA_parameters)
+    [GA_generation_num, GA_best_fitness_in_generation, best_solution_GA, best_objective_GA] = GA.genetic_algorithm(GA_parameters)
+    if get_avarge_time:
+        GA_avg_execution_time = performance.get_avg_running_time(GA.genetic_algorithm,GA_parameters,num_runs)
+        print(f"Average GA excution time: ,{GA_avg_execution_time} seconds")
+    if(not compare_algos):
+        performance.plot_fitness_against_progress(GA_generation_num, GA_best_fitness_in_generation, 'Genetic Algorithm','generation number', "Best individual's fitness in this generation")
     #return cars to initial conditions
     for car in list(main_cars_list + ramp_cars_list):
         car.return_to_initial_conditions()
@@ -160,46 +158,60 @@ if simulate_GA:
 #discrete PSO
 Neighborhood_size = 30
 max_iter = 100 #number of iterations
-synchronous = False 
+synchronous = False #or Asynchronous
 varying_w = True
-star_topology = True
+star_topology = False #or ring
 c1 = 1.49  # cognitive parameter
-c2 = 1.49 # social parameter
+c2 = 0.7 # social parameter
 inertia_w = 0.792  # inertia weight intially
 w_min = 0.2  # Minimum inertia weight
 max_iter = 100  # Maximum number of iterations
 vel_max = 0.6 #maximum velocity of a particle
 
-
+DPSO_parameters = [solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous, w_min, vel_max,
+    star_topology, varying_w, weight_func_1, cc_parameters, highway, main_cars_list, ramp_cars_list]
 
 
 
 if simulate_PSO:
-    [best_particle_fitness_list, best_particle_position_list, best_fitness_overall, best_solution_overall] = discrete_pso.discrete_pso(solution_size, Neighborhood_size, max_iter, inertia_w, c1, c2, synchronous, w_min, vel_max,
-    star_topology, varying_w, weight_func_1, cc_parameters, highway, main_cars_list, ramp_cars_list)
+    algo_list.append(DPSO.discrete_pso)
+    algo_parameters_list.append(DPSO_parameters)
+    [iterations,best_particle_fitness_list, best_solution_overall, best_fitness_overall] = DPSO.discrete_pso(DPSO_parameters)
     print(f"best solution overall {best_solution_overall} and its fitness is {best_fitness_overall}")
-    plot.plot_DPSO(range(max_iter),best_particle_fitness_list)  
     
+    if get_avarge_time:
+        DPSO_avg_execution_time = performance.get_avg_running_time(DPSO.discrete_pso,DPSO_parameters,num_runs)
+        print(f"Average DPSO excution time: ,{DPSO_avg_execution_time} seconds")
+    if (not compare_algos):    
+        performance.plot_fitness_against_progress(iterations, best_particle_fitness_list, "Discrete Particle swarm Algorithm",'Time', 'Best Individual Fitness')  
+
+
     #not 2d --> will not work for now
     #plot.plot_DPSO(range(max_iter),best_particle_position_list)    
 
 
+#Binary Fire Fly Algorthim
 population_size = 6
-num_of_iteration = 20
-if simulate_BFFA:
-    t = 0
-    fitness_plot = []
-    iteration_plot = []
-    while t < num_of_iteration:
-        [sorted_firefly_population,sorted_fitness_list] = BFFA.binary_FFA(t,num_of_iteration,population_size,solution_size,main_cars_list,ramp_cars_list,weight_func_1 ,cc_parameters, highway)
+num_of_iteration = 100
 
-        best_sol_in_generation = sorted_firefly_population[0]
-        best_objective_in_generation = sorted_fitness_list[0]
-        fitness_plot.append(best_objective_in_generation)
-        iteration_plot.append(t)
-        t = t+1
-        print(sorted_fitness_list)
-    plot.plot_BFFA(iteration_plot, fitness_plot)
-   
-   # if visualize_simulation:
-    #    Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
+BFFA_parameters = [num_of_iteration,population_size,solution_size,main_cars_list,ramp_cars_list,weight_func_1 ,cc_parameters, highway]
+
+
+
+if simulate_BFFA:
+    algo_list.append(Rc_BFFA.binary_FFA)
+    algo_parameters_list.append(BFFA_parameters)
+    [iterations, best_fitness_list_BFFA, best_solution_overall_BFFA, best_fitness_overall_BFFA] = Rc_BFFA.binary_FFA(BFFA_parameters)
+    
+    if get_avarge_time:
+        BFFA_avg_execution_time = performance.get_avg_running_time(Rc_BFFA.binary_FFA,BFFA_parameters,num_runs)
+        print(f"Average BFFA excution time: ,{BFFA_avg_execution_time} seconds")
+    if (not compare_algos):
+        performance.plot_fitness_against_progress(iterations, best_fitness_list_BFFA, 'Binary Fire FLy Algorithm', 'generation number', 'Best individual in this generation')
+
+    if visualize_simulation:
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA,cc_parameters)
+
+#compare algorithims
+if compare_algos:
+    performance.compare_fitness(algo_list, algo_parameters_list, 100)

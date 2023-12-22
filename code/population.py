@@ -6,7 +6,7 @@ import sequence
 from particle_class import Particle
 from copy import copy
 
-
+#the intialization gurantees feasability
 #returns solution in binary
 def initialize_population(population_size, solution_size,  main_cars_list ,ramp_cars_list,road, cc_parameters):
     population = []
@@ -21,6 +21,7 @@ def initialize_population(population_size, solution_size,  main_cars_list ,ramp_
     return population
 
 #returns a list of fitnesses
+#
 def calc_fitness_list(population, weight_func_1, main_cars_list, ramp_cars_list, cc_parameters, road):
     fitness_list = []
     for individual in population:
@@ -29,7 +30,8 @@ def calc_fitness_list(population, weight_func_1, main_cars_list, ramp_cars_list,
         if curr_individual_fitness != -1:
             fitness_list.append(curr_individual_fitness)
         else:
-            print("a solution is not feasable")
+            print("weird ..a solution is not feasable! how come you are tring to get the fitness without checking feasability first?")
+            print("did you read the readme?")
     return fitness_list
 
 
@@ -96,7 +98,7 @@ def update_global_best(particles, synchronous, star_topology):
         global_best_particle_solution = 0
 
     #assign the instance variables for each particle
-    for  particle in particles:
+    for particle in particles:
         if not synchronous:
             if particle.fitness > global_best_particle_fitness :
                 global_best_particle_fitness = particle.fitness
@@ -107,6 +109,8 @@ def update_global_best(particles, synchronous, star_topology):
             particle.solution =  global_best_particle_solution
         #assume ring tobology
         else:
+            if (particles.index(particle) + 1) == len(particles):
+                continue
             previous_particle = particles[particles.index(particle) - 1]
             next_particle = particles[particles.index(particle) + 1]
             if previous_particle.fitness > next_particle.fitness :
@@ -114,14 +118,13 @@ def update_global_best(particles, synchronous, star_topology):
                 particle.Nbest_solution = previous_particle.solution
             elif previous_particle.fitness < next_particle.fitness :
                 particle.Nbest_fitness = next_particle.fitness
-                particle.Nbest_solution = next_particle.solutino
+                particle.Nbest_solution = next_particle.solution
 
     return global_best_particle_fitness, global_best_particle_solution
         
 
 #using the binary discritaization developed by the creators of pso
 def update_motion(particles, c1, c2, vel_max, weight_func_1, cc_parameters, road, main_cars_list, ramp_cars_list):
-   
     for particle in particles:
         particle_feasibility = False     
         while (not particle_feasibility):
@@ -136,7 +139,7 @@ def update_motion(particles, c1, c2, vel_max, weight_func_1, cc_parameters, road
             cognitive_component = np.dot((c1*r1), (particle.Pbest_position - particle.position)) 
             social_component = np.dot((c2 * r2), (particle.Nbest_position - particle.position))
 
-            print(f"inertia: {inertia_component}, cognitive: {cognitive_component}, social : {social_component}")
+            #print(f"inertia: {inertia_component}, cognitive: {cognitive_component}, social : {social_component}")
             #velocity is a vector 
             particle.velocity = inertia_component + cognitive_component + social_component
 
@@ -146,7 +149,7 @@ def update_motion(particles, c1, c2, vel_max, weight_func_1, cc_parameters, road
             #update position for binary PSO
             particle.position = particle.position + particle.velocity
             
-            print(f"velocity: {particle.velocity}, position : {particle.position}")
+            #print(f"velocity: {particle.velocity}, position : {particle.position}")
             #update solution from sigmoid
             new_solution = []
             for x in particle.position:
@@ -163,10 +166,28 @@ def update_motion(particles, c1, c2, vel_max, weight_func_1, cc_parameters, road
                 particle.solution = new_solution
                 particle_feasibility = True
 
-        print("new solution", new_solution)
+        #print("new solution", new_solution)
         #update personal Best
         if particle.fitness > particle.Pbest_fitness:
             particle.Pbest_fitness = particle.fitness
             particle.Pbest_solution = particle.solution
 
 
+#the returncost attractiveness 
+def eval_attractiveness(firefly_k, firefly_l, f_max,main_cars_list,ramp_cars_list,w1,cc_parameters,road):
+    # Assuming firefly_k and firefly_l are represented as lists of coordinates in the search space
+    firefly_l_fitness = fitness(w1, firefly_k, cc_parameters, road, main_cars_list, ramp_cars_list)
+    firefly_k_fitness = fitness(w1, firefly_k, cc_parameters, road, main_cars_list, ramp_cars_list)
+    
+    # Calculate Return
+    #added 0.001 in case it leads to division by zero
+    return_value = (firefly_l_fitness - firefly_k_fitness) / ((f_max - firefly_k_fitness) + 0.001)
+    #print("evaluation of attractiveness",firefly_k)
+    # Calculate Cost
+    cost_value = sum(abs(coord_k - coord_l) for coord_k, coord_l in zip(firefly_k,firefly_l))
+
+    #calculate attractiveness based on cost and return 
+    attractiveness = 0.5 * ((1 / (cost_value + 1)) + return_value)
+    #print(attractiveness)
+    #print(firefly_k_fitness)
+    return attractiveness
