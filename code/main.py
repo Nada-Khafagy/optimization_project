@@ -9,11 +9,13 @@ import performance
 import SA
 import GA
 import DPSO
+import Rc_BFFA
 
 #what do you want?
 simulate_SA = False
 simulate_GA = False
 simulate_DPSO = True
+simulate_BFFA = False
 visualize_simulation = True
 get_avarge_time = False
 get_all_data = False
@@ -130,7 +132,7 @@ if simulate_SA:
     for car in list(main_cars_list+ramp_cars_list):
         car.return_to_initial_conditions()
     if visualize_simulation:
-        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA_obj,cc_parameters)
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_SA_obj,cc_parameters, highway)
 
 
 # Genetic Algorithm Example usage
@@ -166,7 +168,7 @@ if simulate_GA:
         car.return_to_initial_conditions()
     best_solution_GA_obj = sequence.get_car_object_list_from_sequence(best_solution_GA, main_cars_list, ramp_cars_list)
     if visualize_simulation:
-        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA_obj,cc_parameters)
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_GA_obj,cc_parameters, highway)
 
 
 #discrete PSO
@@ -177,7 +179,6 @@ star_topology = False #or ring
 c1 = 1.49  # cognitive parameter
 c2 = 1.49 # social parameter
 #inertia_w = 0.792  # inertia weight intially
-max_iter = 100  # Maximum number of iterations
 vel_max = 6.0 #maximum velocity of a particle
 
 DPSO_parameters = [solution_size, Neighborhood_size, max_iter, c1, c2, synchronous, vel_max,
@@ -209,8 +210,7 @@ if simulate_DPSO:
         car.return_to_initial_conditions()
 
     if visualize_simulation:
-        print("visualize")
-        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_DPSO_obj,cc_parameters)
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_DPSO_obj,cc_parameters, highway)
 
     #not 2d --> will not work for now
     #plot.plot_DPSO(range(max_iter),best_particle_position_list)    
@@ -221,6 +221,34 @@ population_size = 6
 num_of_iteration = 100
 
 BFFA_parameters = [num_of_iteration,population_size,solution_size,main_cars_list,ramp_cars_list,weight_func_1 ,cc_parameters, highway]
+
+
+if simulate_BFFA:
+    algo_list.append(Rc_BFFA.binary_FFA)
+    algo_parameters_list.append(BFFA_parameters)
+    [iterations, best_fitness_list_BFFA, best_solution_BFFA, best_fitness_BFFA] = Rc_BFFA.binary_FFA(BFFA_parameters)
+    if (not compare_algos):
+        if not get_all_data:
+                print(f"Best BFFA solution:{best_solution_DPSO}")
+                print(f"Best BFFA fitness: {best_fitness_DPSO}" ) 
+        performance.plot_fitness_against_progress(iterations, best_fitness_list_BFFA, 'Binary Fire FLy Algorithm', 'generation number', 'Best individual in this generation')
+    if get_all_data:
+        performance.get_best_worst_time( Rc_BFFA.binary_FFA, BFFA_parameters,num_runs)
+        
+    elif get_avarge_time:
+        BFFA_avg_execution_time = performance.get_avg_running_time(Rc_BFFA.binary_FFA,BFFA_parameters,num_runs)
+        print(f"Average BFFA excution time: ,{BFFA_avg_execution_time} seconds")
+        
+    #for visualization
+    best_solution_BFFA_obj = sequence.get_car_object_list_from_sequence(best_solution_BFFA, main_cars_list, ramp_cars_list)
+
+    #return cars to initial conditions
+    for car in list(main_cars_list + ramp_cars_list):
+        car.return_to_initial_conditions()
+    if visualize_simulation:
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_BFFA_obj,cc_parameters)
+
+
 
 #compare different algorithims
 if compare_algos:

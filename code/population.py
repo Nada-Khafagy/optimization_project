@@ -3,8 +3,6 @@ import math
 import random
 from objective_func import fitness
 import sequence
-from particle_class import Particle
-from copy import copy
 
 #the intialization gurantees feasability
 #returns solution in binary
@@ -134,26 +132,16 @@ def update_motion(particle, c1, c2, vel_max, weight_func_1, cc_parameters, road,
     inertia_component =  particle.velocity
     cognitive_component = np.dot((c1*r1), (np.array(particle.Pbest_solution) - np.array(particle.solution) )) 
     social_component = np.dot((c2*r2), (np.array(particle.Nbest_solution) - np.array(particle.solution)) )
-    #print("particle.Pbest_solution",particle.Pbest_solution)
-    #print("inertia_component",inertia_component)
-    #print("cognitive_component", cognitive_component)
-    #print("social_component", social_component)
-    #print(f"inertia: {inertia_component}, cognitive: {cognitive_component}, social : {social_component}")
 
     #velocity is a vector 
     particle.velocity = inertia_component + cognitive_component + social_component
-    #print("particle.velocity before ", particle.velocity)
 
     #saturate if above max
     particle.velocity = np.clip(particle.velocity, -vel_max, vel_max)
-    #print("particle.velocity after", particle.velocity)
-    #update position for binary PSO
 
+    #update position for binary PSO
     #position is a numpy array
     new_position = particle.solution + particle.velocity 
-    #print("particle.solution: ", particle.solution)
-    
-    #print(f"velocity: {particle.velocity}, position : {particle.position}")
 
     #update solution from sigmoid (probability to change)
     new_solution = []
@@ -175,7 +163,7 @@ def update_motion(particle, c1, c2, vel_max, weight_func_1, cc_parameters, road,
         #particle_feasibility = True
         #print("new solution",new_solution )
     #else:
-        #print("not fasibile, used previous solution")
+        #print("not feasibile, used previous solution")
 
     #update personal Best
     if particle.fitness > particle.Pbest_fitness:
@@ -184,8 +172,6 @@ def update_motion(particle, c1, c2, vel_max, weight_func_1, cc_parameters, road,
         particle.Pbest_solution = particle.solution
         
             
-
-
 #the returncost attractiveness 
 def eval_attractiveness(firefly_k, firefly_l, f_max,main_cars_list,ramp_cars_list,w1,cc_parameters,road):
     # Assuming firefly_k and firefly_l are represented as lists of coordinates in the search space
