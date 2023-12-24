@@ -9,6 +9,7 @@ class Particle:
         #personal best
         self.Pbest_position = self.position
         self.Pbest_fitness = self.fitness
+        #solution is a binary list
         self.Pbest_solution = self.solution
 
         #global best

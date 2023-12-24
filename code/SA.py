@@ -10,6 +10,7 @@ def simulated_annealing(SA_parameters):
     current_fitness = 0
     best_solution = None
     best_fitness = 0
+
     iteration_index = 0
     #travel_time=[]
     SA_temprature_List = []
@@ -39,10 +40,10 @@ def simulated_annealing(SA_parameters):
                     current_fitness = new_fitness 
             
             #update best solution and fitness
-            if (best_solution is None) or (best_fitness < current_fitness) :
+            if (best_solution is None or (best_fitness < current_fitness)):
                 best_solution = current_solution
-                best_fitness = current_fitness   
-
+                best_fitness = current_fitness
+    
             #apply cooling schedule
             if linear :          
                 curr_temperature = initial_temperature - cooling_rate*iteration_index
@@ -60,7 +61,7 @@ def simulated_annealing(SA_parameters):
 
             #print("Accepted Sequence is: ", sequence.turn_binary_to_letters(current_solution))
             #print("current fitness:", current_fitness)
-          
+        
     return SA_temprature_List, SA_fitness_List, best_solution, best_fitness
 
 

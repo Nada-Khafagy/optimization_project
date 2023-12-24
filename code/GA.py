@@ -16,6 +16,8 @@ def genetic_algorithm(GA_parameters):
 
     best_solution_overall = None
     best_fitness_overall = 0
+
+    
     GA_best_fitness_in_generation = []
     prev_elite = []
 
@@ -77,7 +79,7 @@ def genetic_algorithm(GA_parameters):
 
         # Replace the old population with the new one
         #print(elite[0] in offspring)
-        prev_elite = elite
+        #prev_elite = elite
         GA_population = offspring
         #print("population size :", len(GA_population))
         fitness_list = population.calc_fitness_list(GA_population, weight_func_1, main_cars_list, ramp_cars_list, cc_parameters, road)
@@ -85,9 +87,11 @@ def genetic_algorithm(GA_parameters):
 
         best_solution_index_per_iteration = np.argmax(fitness_list)
         # Update the best solution found so far
-        if best_solution_overall is None or fitness_list[best_solution_index_per_iteration] > best_fitness_overall:
+        if (best_solution_overall is None or fitness_list[best_solution_index_per_iteration] > best_fitness_overall):
             best_solution_overall = GA_population[best_solution_index_per_iteration]
             best_fitness_overall = fitness_list[best_solution_index_per_iteration]
+
+         
         #update generation best
         #print(fitness_list[best_solution_index_per_iteration])
 
