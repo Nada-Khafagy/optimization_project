@@ -139,3 +139,10 @@ def visualization(main_cars_list,ramp_cars_list,car_sequence,cc_parameters, road
         plt.pause(0.001)  # Pause for visualization
 
     
+def move_marker():
+    #do stuff
+    return
+
+def move_label(car_assoc):
+    #do stuff
+    return

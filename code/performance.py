@@ -1,14 +1,15 @@
 import matplotlib.pyplot as plt
 import time
 import SA
+import math
 
 
 def plot_fitness_against_progress(x, y, algo_name, x_label, y_label):
     plt.plot(x,y)
     # Add labels and a legend
     plt.ylim(0, 1)
-    plt.xlabel(x_label, fontsize=20)
-    plt.ylabel(y_label, fontsize=20)
+    plt.xlabel(x_label, fontsize=16)
+    plt.ylabel(y_label, fontsize=16)
     plt.title(algo_name, fontsize=16)
     if(algo_name == 'Simulated Annealing Algorithm'):
         plt.gca().invert_xaxis()
@@ -42,7 +43,7 @@ def compare_avg_runing_time(func,func_paramters, runs_num ):
 
 #for now it is limited to 6
 def compare_fitness(algo_list, algo_paramters_list, iterations_num):
-    colors = ['r','b','y','o','g','br']
+    colors = ['r','b','y','k','g','c', 'm']
     for algo,algp_parameters,coluor in zip(algo_list, algo_paramters_list, colors):
         [x,y,best_sol, best_fitness] = algo(algp_parameters)
         algo_name = str(algo)
@@ -52,8 +53,8 @@ def compare_fitness(algo_list, algo_paramters_list, iterations_num):
             plt.gca().invert_xaxis()
 
     plt.ylim(0, 1)
-    plt.xlabel("Progress", fontsize=20)
-    plt.ylabel("Fitness", fontsize=20)
+    plt.xlabel("Progress", fontsize=16)
+    plt.ylabel("Fitness", fontsize=16)
     plt.legend()
     plt.title("Comparison between different algorithms", fontsize=16)     
     plt.grid(True)
@@ -92,12 +93,14 @@ def get_best(algo, algo_parameters, iterations_num):
     return best_solution_overall, best_fitness_overall 
 
 #why you ask? so it can get all these info in the same loop ..
-def get_best_worst_time(algo, algo_parameters, iterations_num):
+def evaluate_performance(algo, algo_parameters, iterations_num):
     best_fitness_overall = 0
     best_solution_overall = []
     worst_fitness_overall = 1
     worst_solution_overall = []
     run_time_list = []
+    avg_fitness = 0
+    fitness_sum = 0
     for  _ in range(iterations_num):
         start_time = time.time()
         [x, y, best_solution, best_fitness] = algo(algo_parameters) 
@@ -106,24 +109,51 @@ def get_best_worst_time(algo, algo_parameters, iterations_num):
             best_solution_overall = best_solution
         if(best_fitness < worst_fitness_overall):
              worst_fitness_overall = best_fitness
-             worst_solution_overall = best_solution
-        
+             worst_solution_overall = best_solution   
         end_time = time.time() 
         running_time = end_time - start_time
-        run_time_list.append(running_time)           
-    avg_runing_time = sum(run_time_list)/len(run_time_list)
+        run_time_list.append(running_time)      
+        fitness_sum += best_fitness  
+    avg_runing_time = sum(run_time_list) / len(run_time_list)
+    avg_fitness = fitness_sum / iterations_num
+
+    dev = 0
+    for _ in range(iterations_num):
+        [x, y, best_solution, best_fitness] = algo(algo_parameters) 
+        dev += (avg_fitness - best_fitness)**2
+    standard_dev = math.sqrt(dev) / iterations_num
+
+    coefficient_of_variation = standard_dev / avg_fitness
     #print data
     algo_name = str(algo)
     algo_name = (algo_name[10:algo_name.find(' ',10)])
-    print(f"Best {algo_name} solution:{best_solution_overall} ")
-    print(f"Best {algo_name} fitness: {best_fitness_overall}" )
-    print(f"Worst {algo_name} solution:{worst_solution_overall} ")
-    print(f"Worst {algo_name} fitness: {worst_fitness_overall}" )
-    print(f"Average {algo_name} excution time:  {avg_runing_time} seconds")
+    print(f"Best {algo_name} solution in {iterations_num} runs :{best_solution_overall} ")
+    print(f"Best {algo_name} fitness in {iterations_num} runs : {best_fitness_overall}" )
+    print(f"Worst {algo_name} solution in {iterations_num} runs :{worst_solution_overall} ")
+    print(f"Worst {algo_name} fitness in {iterations_num} runs : {worst_fitness_overall}" )
+    print(f"Average {algo_name} excution time in {iterations_num} runs :  {avg_runing_time} seconds")
+    print(f"Average {algo_name} fitness in {iterations_num} runs : {avg_fitness} ")
+    print(f"Standard deviation of {algo_name} in {iterations_num} runs : {standard_dev} ")
+    print(f"coefficient of variation of {algo_name} in {iterations_num} runs : {coefficient_of_variation} ")
+
+    return best_solution_overall, best_fitness_overall, worst_solution_overall, worst_fitness_overall, avg_runing_time, avg_fitness
     
-    return best_solution_overall, best_fitness_overall, worst_solution_overall, worst_fitness_overall, avg_runing_time
-    
-def get_standard_deviation():
-    #do stuff
-    return
+def get_average_fitness(algo, algo_parameters, iterations_num):
+    avg_fitness = 0
+    sum = 0
+    for _ in range(iterations_num):
+        [x, y, best_solution, best_fitness] = algo(algo_parameters) 
+        sum += best_fitness   
+    avg_fitness = sum / iterations_num
+    return avg_fitness
+
+def get_standard_deviation(algo, algo_parameters, iterations_num):
+    avg_fitness = get_average_fitness(algo, algo_parameters, iterations_num)
+    dev = 0
+    for _ in range(iterations_num):
+        [x, y, best_solution, best_fitness] = algo(algo_parameters) 
+        dev += (avg_fitness - best_fitness)**2
+    standard_dev = math.sqrt(dev) / iterations_num
+
+    return standard_dev
     

@@ -176,15 +176,13 @@ def update_motion(particle, c1, c2, vel_max, weight_func_1, cc_parameters, road,
 def eval_attractiveness(firefly_k, firefly_l, f_max,main_cars_list,ramp_cars_list,w1,cc_parameters,road):
     # Assuming firefly_k and firefly_l are represented as lists of coordinates in the search space
     firefly_l_fitness = fitness(w1, firefly_k, cc_parameters, road, main_cars_list, ramp_cars_list)
-    firefly_k_fitness = fitness(w1, firefly_k, cc_parameters, road, main_cars_list, ramp_cars_list)
-    
+    firefly_k_fitness = fitness(w1, firefly_k, cc_parameters, road, main_cars_list, ramp_cars_list)   
     # Calculate Return
     #added 0.001 in case it leads to division by zero
     return_value = (firefly_l_fitness - firefly_k_fitness) / ((f_max - firefly_k_fitness) + 0.001)
     #print("evaluation of attractiveness",firefly_k)
     # Calculate Cost
     cost_value = sum(abs(coord_k - coord_l) for coord_k, coord_l in zip(firefly_k,firefly_l))
-
     #calculate attractiveness based on cost and return 
     attractiveness = 0.5 * ((1 / (cost_value + 1)) + return_value)
     #print(attractiveness)

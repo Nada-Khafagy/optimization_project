@@ -12,13 +12,13 @@ import DPSO
 import Rc_BFFA
 
 #what do you want?
-simulate_SA = False
-simulate_GA = False
+simulate_SA = True
+simulate_GA = True
 simulate_DPSO = True
-simulate_BFFA = False
-visualize_simulation = True
+simulate_BFFA = True
+visualize_simulation = False
 get_avarge_time = False
-get_all_data = False
+get_all_data = True
 num_runs = 10 #for averging 
 compare_algos = False
 
@@ -26,9 +26,7 @@ main_cars_num = 10
 ramp_cars_num = 5
 solution_size = 10
 
-if get_all_data:
-    get_avarge_time = True
-if not get_avarge_time:
+if not get_avarge_time and not get_all_data:
     num_runs = 1
 
 #constraints
@@ -120,7 +118,7 @@ if simulate_SA:
                 print(f"Best SA fitness: {best_fitness_SA}" ) 
         performance.plot_fitness_against_progress(SA_temprature_List, SA_fitness_List, 'Simulated Annealing Algorithm', 'temprature', 'Fitness Value')
     if get_all_data :
-        performance.get_best_worst_time(SA.simulated_annealing,SA_parameters,num_runs)
+        performance.evaluate_performance(SA.simulated_annealing,SA_parameters,num_runs)
         
     elif get_avarge_time:
         SA_avg_execution_time = performance.get_avg_running_time(SA.simulated_annealing,SA_parameters,num_runs)
@@ -155,7 +153,7 @@ if simulate_GA:
                 print(f"Best GA fitness: {best_fitness_GA}" ) 
         performance.plot_fitness_against_progress(GA_generation_num, GA_best_fitness_in_generation, 'Genetic Algorithm','generation number', "Best individual's fitness in this generation")
     if get_all_data:
-        performance.get_best_worst_time( GA.genetic_algorithm, GA_parameters,num_runs)
+        performance.evaluate_performance( GA.genetic_algorithm, GA_parameters,num_runs)
         
     elif get_avarge_time:
         GA_avg_execution_time = performance.get_avg_running_time(GA.genetic_algorithm,GA_parameters,num_runs)
@@ -196,7 +194,7 @@ if simulate_DPSO:
             performance.plot_fitness_against_progress(iterations, best_particle_fitness_list, "Discrete Particle swarm Algorithm",'Time', 'Best Individual Fitness') 
 
     if get_all_data:
-        performance.get_best_worst_time( DPSO.discrete_pso, DPSO_parameters,num_runs)
+        performance.evaluate_performance( DPSO.discrete_pso, DPSO_parameters,num_runs)
     elif get_avarge_time:
         DPSO_avg_execution_time = performance.get_avg_running_time(DPSO.discrete_pso,DPSO_parameters,num_runs)
         print(f"Average DPSO excution time: ,{DPSO_avg_execution_time} seconds")
@@ -229,11 +227,11 @@ if simulate_BFFA:
     [iterations, best_fitness_list_BFFA, best_solution_BFFA, best_fitness_BFFA] = Rc_BFFA.binary_FFA(BFFA_parameters)
     if (not compare_algos):
         if not get_all_data:
-                print(f"Best BFFA solution:{best_solution_DPSO}")
-                print(f"Best BFFA fitness: {best_fitness_DPSO}" ) 
-        performance.plot_fitness_against_progress(iterations, best_fitness_list_BFFA, 'Binary Fire FLy Algorithm', 'generation number', 'Best individual in this generation')
+                print(f"Best BFFA solution:{best_solution_BFFA}")
+                print(f"Best BFFA fitness: {best_fitness_BFFA}" ) 
+        performance.plot_fitness_against_progress(iterations, best_fitness_list_BFFA, 'Binary Fire FLy Algorithm', 'Generation number', 'Best individual in this generation')
     if get_all_data:
-        performance.get_best_worst_time( Rc_BFFA.binary_FFA, BFFA_parameters,num_runs)
+        performance.evaluate_performance(Rc_BFFA.binary_FFA, BFFA_parameters, num_runs)
         
     elif get_avarge_time:
         BFFA_avg_execution_time = performance.get_avg_running_time(Rc_BFFA.binary_FFA,BFFA_parameters,num_runs)
@@ -246,7 +244,7 @@ if simulate_BFFA:
     for car in list(main_cars_list + ramp_cars_list):
         car.return_to_initial_conditions()
     if visualize_simulation:
-        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_BFFA_obj,cc_parameters)
+        Simulation.visualization(main_cars_list,ramp_cars_list,best_solution_BFFA_obj,cc_parameters, highway)
 
 
 
