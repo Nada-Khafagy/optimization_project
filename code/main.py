@@ -12,13 +12,13 @@ import DPSO
 import Rc_BFFA
 
 #what do you want?
-simulate_SA = True
-simulate_GA = True
-simulate_DPSO = True
+simulate_SA = False
+simulate_GA = False
+simulate_DPSO = False
 simulate_BFFA = True
-visualize_simulation = False
+visualize_simulation = True
 get_avarge_time = False
-get_all_data = True
+get_all_data = False
 num_runs = 10 #for averging 
 compare_algos = False
 
