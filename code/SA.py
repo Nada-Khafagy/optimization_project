@@ -4,22 +4,18 @@ import math
 import matplotlib.pyplot as plt
 import sequence
 
-
-
-
-def simulated_annealing(initial_temperature,
-final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,
- road, cc_parameters, plot_best):   
+def simulated_annealing(SA_parameters): 
+    initial_temperature, final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_cars_list, ramp_cars_list,solution_size, weight_func_1,road, cc_parameters, plot_best = SA_parameters[:]
     current_solution = None
     current_fitness = 0
     best_solution = None
     best_fitness = 0
+
     iteration_index = 0
     #travel_time=[]
     SA_temprature_List = []
     SA_fitness_List = []
     curr_temperature = initial_temperature
-
     while(curr_temperature > final_temperature) and (curr_temperature>0) and (iteration_index<num_iterations):
         for _ in range(iteration_per_temp):
             #generate new solution as a binary sequence
@@ -44,10 +40,10 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
                     current_fitness = new_fitness 
             
             #update best solution and fitness
-            if (best_solution is None) or (best_fitness < current_fitness) :
+            if (best_solution is None or (best_fitness < current_fitness)):
                 best_solution = current_solution
-                best_fitness = current_fitness   
-
+                best_fitness = current_fitness
+    
             #apply cooling schedule
             if linear :          
                 curr_temperature = initial_temperature - cooling_rate*iteration_index
@@ -65,8 +61,8 @@ final_temperature,num_iterations,iteration_per_temp, cooling_rate,linear, main_c
 
             #print("Accepted Sequence is: ", sequence.turn_binary_to_letters(current_solution))
             #print("current fitness:", current_fitness)
-          
-    return best_solution, best_fitness, SA_temprature_List, SA_fitness_List
+        
+    return SA_temprature_List, SA_fitness_List, best_solution, best_fitness
 
 
 
