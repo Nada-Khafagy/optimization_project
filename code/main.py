@@ -14,8 +14,8 @@ import Rc_BFFA
 #what do you want?
 simulate_SA = False
 simulate_GA = False
-simulate_DPSO = False
-simulate_BFFA = True
+simulate_DPSO = True
+simulate_BFFA = False
 visualize_simulation = True
 get_avarge_time = False
 get_all_data = False
