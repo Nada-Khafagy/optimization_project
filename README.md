@@ -3,15 +3,17 @@ Optimization of the merging of vehicles on ramps into highways
 We assume one lane on the highway
 The intial scenario to optimize is generated stochasticly
 The following optimization algorithims are tested:
-- simulated annealing (linear - geometric)
-- genetic algorithim 
+- Simulated annealing 
+- Genetic algorithim 
+- Discrete particle swarm
+- Return cost - binary firefly algorithm
 
 ## Installation instructions
 - go to optimization_project\code
 - run main.py
 
 we have implemented platooning and substituted in the objective function
-enjoy looking at the vehicles of the main line on the map :) 
+enjoy looking at the vehicles on the map :) 
 
 ## Team members
 | Name              | ID       | GUC-mail               | personal E-mail        |
@@ -21,21 +23,12 @@ enjoy looking at the vehicles of the main line on the map :)
 | Ahmed Mohamed Sleem |49-18230| ahmed.sleem            |ahmedsleem.mail@gmail.com|
 | Nada Tamer        | 49-13614 | nada.abdelhay         |nadatameer@outlook.com   |
 
-## to get a solution
-- randomize a sequence of letters or binary
-- get car objects for this list
-- check feasability in which we cruise control 
-- get objective function
-- return to initial conditions
+
 
 ## To do list
 - change how ramp looks in visualtion
-- change intial positin ramp to the first car on ramp (rest of the cars are already randomized based on value of first cars)
-- make ditance to lead dynamic
-- check for collision
-- make visualzation start from zero and sraet platooning from decsision point 
-- choose what to do if no main line cars in solution (reject?)
-- do as paper does --> use throuhput
+- make visualzation start from zero and start platooning from decsision point 
+- use throuhput and change how we do loop the cars
 
 
 ## code of conduct 
